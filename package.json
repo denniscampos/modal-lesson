@@ -6,6 +6,9 @@
     "dev": "next dev",
     "build:types": "ts-node-dev --transpile-only pages/api/graphql.ts",
     "build": "next build tsc",
+    "db:migrate": "npx prisma migrate dev",
+    "db:seed": "npx prisma db seed",
+    "db:reset": "npx prisma migrate reset",
     "start": "next start",
     "lint": "next lint"
   },
