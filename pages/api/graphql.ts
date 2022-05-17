@@ -1,55 +1,30 @@
-import { ApolloServer, gql } from 'apollo-server';
-import { prisma } from '../../lib/prismaClient';
-
-const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
-
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-  }
-`;
-
-const books = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  },
-];
-
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-};
+import { ApolloServer } from 'apollo-server-micro';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { schema } from '../../graphql/schema';
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: prisma,
-  csrfPrevention: true,
+  schema
 })
 
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+export const config = {
+  api: {
+    bodyParser: false,
+  }
+}
 
+const startServer = server.start();
 
+// https://stackoverflow.com/questions/68745267/apollo-server-micro-response-is-missing-header-access-control-allow-methods-p
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  res.setHeader("Access-Control-Allow-Origin", "https://studio.apollographql.com");
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Headers', ' Content-Type');
 
-// const handler = apolloServer.createHandler({ path: '/api/graphql' });
+  if(req.method === "OPTIONS") {
+    res.end(); 
+    return false;
+  } 
 
-// export const config = { api: { bodyParser: false} };
-
-// export default handler;
+  await startServer;
+  await server.createHandler({ path: '/api/graphql' })(req, res);
+}
