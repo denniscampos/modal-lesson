@@ -15,6 +15,7 @@ const Home: NextPage = () => {
       </Head>
 
       <h1 className="text-orange-600 text-7xl">MODAL LESSON VIBES! 🚀</h1>
+      <h2 className="bg-primary text-6xl">asdf</h2>
       {session ? (
         <>
           <p>Signed in as {session?.user?.email}</p>
