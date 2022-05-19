@@ -10,7 +10,12 @@
     "db:seed": "npx prisma db seed",
     "db:reset": "npx prisma migrate reset",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type": "module",
+    "ts-node": "ts-node-dev --compiler-options '{\"module\":\"CommonJS\"}'"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.6.2",

@@ -47,9 +47,7 @@ export interface NexusGenObjects {
   Query: {};
   User: { // root type
     email?: string | null; // String
-    id?: string | null; // String
-    image?: string | null; // String
-    name?: string | null; // String
+    id?: number | null; // Int
   }
 }
 
@@ -82,12 +80,12 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     drafts: Array<NexusGenRootTypes['Post'] | null>; // [Post]!
+    userById: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
     email: string | null; // String
-    id: string | null; // String
-    image: string | null; // String
-    name: string | null; // String
+    id: number | null; // Int
+    sessions: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
 }
 
@@ -110,16 +108,21 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     drafts: 'Post'
+    userById: 'User'
   }
   User: { // field return type name
     email: 'String'
-    id: 'String'
-    image: 'String'
-    name: 'String'
+    id: 'Int'
+    sessions: 'User'
   }
 }
 
 export interface NexusGenArgTypes {
+  Query: {
+    userById: { // args
+      id?: number | null; // Int
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {

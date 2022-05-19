@@ -22,11 +22,14 @@ type Post {
 
 type Query {
   drafts: [Post]!
+  userById(id: Int): User
 }
 
 type User {
+  """Users email"""
   email: String
-  id: String
-  image: String
-  name: String
+
+  """Id of the user"""
+  id: Int
+  sessions: [User]
 }

@@ -1,7 +1,11 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 const Home: NextPage = () => {
+  // temp for now extract once layout has been established
+  const { data: session } = useSession();
+
   return (
     <div>
       <Head>
@@ -11,6 +15,19 @@ const Home: NextPage = () => {
       </Head>
 
       <h1 className="text-orange-600 text-7xl">MODAL LESSON VIBES! 🚀</h1>
+      {session ? (
+        <>
+          <p>Signed in as {session?.user?.email}</p>
+          <button onClick={() => signOut()}>Sign out</button>
+        </>
+      ) : (
+        <>
+          <p>Not signed in</p>
+          <button onClick={() => signIn('google', { callbackUrl: '/' })}>
+            Sign in with Google.
+          </button>
+        </>
+      )}
     </div>
   );
 };

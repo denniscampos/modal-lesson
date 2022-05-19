@@ -1,13 +1,28 @@
-import { enumType, intArg, objectType, stringArg } from 'nexus';
-// import { extendType } from 'nexus';
-// import { Link } from './Link';
+// import { objectType, extendType, intArg } from 'nexus';
 
-export const User = objectType({
-  name: 'User',
-  definition(t) {
-    t.string('id');
-    t.string('name');
-    t.string('email');
-    t.string('image');
-  },
-});
+// below is an example to make a query...
+
+// export const User = objectType({
+//   name: 'User',
+//   definition(t) {
+//     t.int('id', { description: 'Id of the user' });
+//     t.string('email', { description: 'Users email' });
+//     t.list.field('sessions', {
+//       type: User, // or "Post"
+//       resolve(root: any, __, ctx: any) {
+//         return ctx.getUser(root.id).sessions();
+//       },
+//     });
+//   },
+// });
+
+// export const UserInfo = extendType({
+//   type: 'Query',
+//   definition: (t) => {
+//     t.field('userById', {
+//       type: 'User',
+//       args: { id: intArg('id of the user') },
+//       resolve: (_, args, ctx) => ctx.user.getById(args?.id),
+//     });
+//   },
+// });
