@@ -39,16 +39,11 @@ export interface NexusGenObjects {
     userId?: number | null; // Int
   }
   Post: { // root type
-    body?: string | null; // String
-    id?: number | null; // Int
-    published?: boolean | null; // Boolean
+    content?: string | null; // String
+    id?: string | null; // String
     title?: string | null; // String
   }
   Query: {};
-  User: { // root type
-    email?: string | null; // String
-    id?: number | null; // Int
-  }
 }
 
 export interface NexusGenInterfaces {
@@ -73,19 +68,12 @@ export interface NexusGenFieldTypes {
     userId: number | null; // Int
   }
   Post: { // field return type
-    body: string | null; // String
-    id: number | null; // Int
-    published: boolean | null; // Boolean
+    content: string | null; // String
+    id: string | null; // String
     title: string | null; // String
   }
   Query: { // field return type
-    drafts: Array<NexusGenRootTypes['Post'] | null>; // [Post]!
-    userById: NexusGenRootTypes['User'] | null; // User
-  }
-  User: { // field return type
-    email: string | null; // String
-    id: number | null; // Int
-    sessions: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    posts: Array<NexusGenRootTypes['Post'] | null>; // [Post]!
   }
 }
 
@@ -101,28 +89,16 @@ export interface NexusGenFieldTypeNames {
     userId: 'Int'
   }
   Post: { // field return type name
-    body: 'String'
-    id: 'Int'
-    published: 'Boolean'
+    content: 'String'
+    id: 'String'
     title: 'String'
   }
   Query: { // field return type name
-    drafts: 'Post'
-    userById: 'User'
-  }
-  User: { // field return type name
-    email: 'String'
-    id: 'Int'
-    sessions: 'User'
+    posts: 'Post'
   }
 }
 
 export interface NexusGenArgTypes {
-  Query: {
-    userById: { // args
-      id?: number | null; // Int
-    }
-  }
 }
 
 export interface NexusGenAbstractTypeMembers {

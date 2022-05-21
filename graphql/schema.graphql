@@ -14,22 +14,11 @@ type Link {
 }
 
 type Post {
-  body: String
-  id: Int
-  published: Boolean
+  content: String
+  id: String
   title: String
 }
 
 type Query {
-  drafts: [Post]!
-  userById(id: Int): User
-}
-
-type User {
-  """Users email"""
-  email: String
-
-  """Id of the user"""
-  id: Int
-  sessions: [User]
+  posts: [Post]!
 }
