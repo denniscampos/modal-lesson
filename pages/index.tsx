@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { gql } from '@apollo/client';
 import Editor from '@/components/Editor';
+import Button from '@/components/common/Button';
 
 gql`
   query DraftQuery {
@@ -31,10 +32,13 @@ const Home: NextPage = () => {
       <h2 className="bg-quaternary text-6xl">asdf</h2>
       <h2 className="bg-quinary text-6xl">asdf</h2>
 
+      <Button variant="primary">Submit</Button>
+
       {session ? (
         <>
           <p>Signed in as {session?.user?.email}</p>
           <button onClick={() => signOut()}>Sign out</button>
+          <Editor />
         </>
       ) : (
         <>
@@ -44,7 +48,6 @@ const Home: NextPage = () => {
           </button>
         </>
       )}
-      <Editor />
     </div>
   );
 };
