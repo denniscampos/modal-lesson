@@ -1,6 +1,15 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { gql } from '@apollo/client';
+
+gql`
+  query DraftQuery {
+    drafts {
+      body
+    }
+  }
+`;
 
 const Home: NextPage = () => {
   // temp for now extract once layout has been established
