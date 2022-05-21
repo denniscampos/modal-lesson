@@ -2,10 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-primary: #454d66;
-  --color-secondary: #309975;
-  --color-tertiary: ##58b368;
-  --color-quaternary: #dad873;
-  --color-quinary: #efeeb4;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,600;0,700;0,800;1,100;1,400&display=swap');
+
+@layer base {
+  :root {
+    --color-primary: #454d66;
+    --color-secondary: #309975;
+    --color-tertiary: #58b368;
+    --color-quaternary: #dad873;
+    --color-quinary: #efeeb4;
+  }
 }

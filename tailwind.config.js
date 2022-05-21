@@ -9,6 +9,9 @@ module.exports = {
       quaternary: 'var(--color-quaternary)',
       quinary: 'var(--color-quinary)',
     },
+    fontFamily: {
+      sans: ['Poppins', 'sans-serif'],
+    },
   },
   plugins: [],
 };
