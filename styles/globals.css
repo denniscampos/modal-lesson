@@ -6,6 +6,8 @@
 
 @layer base {
   :root {
+    --font-family: 'Poppins', sans-serif;
+
     --color-primary: #454d66;
     --color-secondary: #309975;
     --color-tertiary: #58b368;
