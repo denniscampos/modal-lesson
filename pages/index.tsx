@@ -34,11 +34,13 @@ const Home: NextPage = () => {
 
       <Button variant="primary">Submit</Button>
 
+      <h3 className="text-secondary">Hello World</h3>
+      <Editor />
+
       {session ? (
         <>
           <p>Signed in as {session?.user?.email}</p>
           <button onClick={() => signOut()}>Sign out</button>
-          <Editor />
         </>
       ) : (
         <>

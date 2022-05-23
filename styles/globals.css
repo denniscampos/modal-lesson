@@ -13,5 +13,10 @@
     --color-tertiary: #58b368;
     --color-quaternary: #dad873;
     --color-quinary: #efeeb4;
+
+    --color-inactive: #dadbe0;
+
+    --color-text-primary: #454d66;
+    --color-text-light: #8f9fb3;
   }
 }
