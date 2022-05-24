@@ -1,6 +1,5 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useSession, signIn, signOut } from 'next-auth/react';
 import { gql } from '@apollo/client';
 import Editor from '@/components/Editor';
 import Button from '@/components/common/Button';
@@ -14,9 +13,6 @@ gql`
 `;
 
 const Home: NextPage = () => {
-  // temp for now extract once layout has been established
-  const { data: session } = useSession();
-
   return (
     <div>
       <Head>
@@ -36,20 +32,6 @@ const Home: NextPage = () => {
 
       <h3 className="text-secondary">Hello World</h3>
       <Editor />
-
-      {session ? (
-        <>
-          <p>Signed in as {session?.user?.email}</p>
-          <button onClick={() => signOut()}>Sign out</button>
-        </>
-      ) : (
-        <>
-          <p>Not signed in</p>
-          <button onClick={() => signIn('google', { callbackUrl: '/' })}>
-            Sign in with Google.
-          </button>
-        </>
-      )}
     </div>
   );
 };

@@ -12,9 +12,11 @@ const Button = ({ children, variant, className, ...args }: ButtonProps) => {
   const { ...props } = args;
 
   return (
-    <button className={`${getVariant(variant)} ${className || ''}`} {...props}>
-      {children}
-    </button>
+    <div>
+      <button className={`${getVariant(variant)} ${className || ''}`} {...props}>
+        {children}
+      </button>
+    </div>
   );
 };
 
@@ -23,9 +25,9 @@ function getVariant(variant: ButtonProps['variant']) {
 
   switch (variant) {
     case 'primary':
-      return `${commonStyles} bg-primary hover:bg-secondary`;
+      return `${commonStyles} bg-primary hover:bg-secondary disabled:opacity-20 disabled:pointer-events-none`;
     case 'secondary':
-      return `${commonStyles} bg-secondary`;
+      return `${commonStyles} bg-secondary disabled:opacity-20 disabled:pointer-events-none`;
     default:
       return '';
   }

@@ -23,3 +23,5 @@ export const Input = ({ type, name, value, onChange, ...args }: InputProps) => {
     />
   );
 };
+
+export default Input;
