@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 
+// import { useForm } from 'react-hook-form';
+
 import { GetServerSideProps } from 'next';
 import { signIn, getProviders } from 'next-auth/react';
 
@@ -24,6 +26,26 @@ const Login: NextPage<ProviderProps> = ({ providers }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // TODO: Boilerplate-ish for now...
+
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm({
+  //   mode: 'onSubmit',
+  //   reValidateMode: 'onChange',
+  //   defaultValues: {
+  //     email: '',
+  //     password: '', // maybe?
+  //   },
+  // });
+
+  // const watchEmail = watch('email');
+  // const watchPassword = watch('password');
+
+  // console.log({ watchEmail });
+
   return (
     <div>
       <Head>
@@ -33,9 +55,16 @@ const Login: NextPage<ProviderProps> = ({ providers }) => {
       </Head>
 
       <h1>Welcome to Modal Lesson</h1>
-      <Label for="email">Email</Label>
-      <Input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <Label for="password">Password</Label>
+      <Label htmlFor="email">Email</Label>
+      <Input
+        type="email"
+        name="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        // {...register('email', { required: true })}
+      />
+
+      <Label htmlFor="password">Password</Label>
       <Input
         type="password"
         name="password"
