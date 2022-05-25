@@ -2,6 +2,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { PrismaClient } from '@prisma/client';
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import { ADMINS } from '../../../admin';
 
 const prisma = new PrismaClient();
 
@@ -65,7 +66,7 @@ export default NextAuth({
   secret: process.env.JWT_SECRET,
   callbacks: {
     async session({ session }: any) {
-      const administrator = [''];
+      const administrator = ADMINS;
 
       if (administrator.includes(session?.user?.email)) {
         session.user.admin = true;
