@@ -1,10 +1,11 @@
 interface InputProps {
   type: string;
   name: string;
-  value: string;
-  onChange: React.EventHandler<React.ChangeEvent<HTMLInputElement>>;
+  value?: string;
+  id: string;
   placeholder?: string;
   className?: string;
+  onChange?: React.EventHandler<React.ChangeEvent<HTMLInputElement>>;
 }
 
 export const Input = ({ type, name, value, onChange, ...args }: InputProps) => {
