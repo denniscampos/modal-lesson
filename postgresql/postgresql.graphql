@@ -1,0 +1,91 @@
+type Post {
+  created_at: DateTime
+  id: ID!
+  text: String
+  title: String
+  updated_at: DateTime
+  user: ID
+}
+
+type Query {
+  getPostList: [Post]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      configuration: "postgresql_config"
+    )
+  """
+  This query is an example of how to simply paginate your responses.
+  """
+  getPaginatedPostList(first: Int!, after: Int!): [Post]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "public"."post" limit $1 offset $2
+      """
+      configuration: "postgresql_config"
+    )
+  """
+  In this example, a single query parameter is passed. If the request to the DB will
+  return at most one value you can remove the square brackets from the result.
+  """
+  getPostById(id: ID!): [Post]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "public"."post" where "id" = $1
+      """
+      configuration: "postgresql_config"
+    )
+  """
+  In this example, two query parameters are passed. If the request to the DB will
+  return at most one value you can remove the square brackets from the result.
+  """
+  getPostByIdAndText(id: ID!, text: String!): [Post]
+    @dbquery(
+      type: "postgresql"
+      query: """
+      select * from "public"."post" where "id" = $1 and "text" = $2
+      """
+      configuration: "postgresql_config"
+    )
+}
+
+type Mutation {
+  """
+  In this mutation example you can see how to do a mutation to insert data in the database.
+  """
+  insertPost(
+    text: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+    user: ID!
+    title: String!
+  ): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+  """
+  In this mutation example you can see how to do a mutation to delete data from the database.
+  """
+  deletePost(
+    text: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+    id: ID!
+    user: ID!
+    title: String!
+  ): Post
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "post"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+}

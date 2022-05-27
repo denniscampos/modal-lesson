@@ -1,10 +1,40 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import { supabase } from '@/lib/supabaseClient';
+import { gql, useQuery } from '@apollo/client';
 
 import Editor from '@/components/Editor';
 import Button from '@/components/common/Button';
+import P from '@/components/common/P';
+
+const POST_QUERY = gql`
+  query MyQuery {
+    getPostList {
+      id
+      text
+      title
+    }
+  }
+`;
 
 const Home: NextPage = () => {
+  // const user = supabase.auth.user();
+  // const session = supabase.auth.session();
+
+  // console.log({ user });
+
+  const { data, loading, error } = useQuery(POST_QUERY);
+
+  if (loading) {
+    return <P variant="p1">Loading...</P>;
+  }
+
+  if (error) {
+    return <p>something went wrong...</p>;
+  }
+
+  console.log(data);
+
   return (
     <div>
       <Head>

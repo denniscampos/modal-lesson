@@ -18,9 +18,9 @@ function getVariant(variant: HeadingProps['variant']) {
     case 'h1':
       return `text-6xl`;
     case 'h2':
-      return `text-5xl`;
+      return `text-3xl text-primary`;
     case 'h3':
-      return `text-2xl`;
+      return `text-2xl text-primary`;
     case 'h4':
       return `text-xl font-bold`;
     case 'h5':
