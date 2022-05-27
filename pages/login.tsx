@@ -12,12 +12,15 @@ const Register = () => {
 
   const router = useRouter();
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
     try {
-      const { session, error } = await supabase.auth.signIn({
+      const { user, session, error } = await supabase.auth.signIn({
         email,
         password,
       });
+
+      console.log('user from login', user);
 
       console.log({ session });
 

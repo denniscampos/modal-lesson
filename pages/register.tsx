@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 // import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -13,7 +13,9 @@ const Register = () => {
 
   const router = useRouter();
 
-  const createNewUser = async () => {
+  const createNewUser = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    // in production need to enable email confirmations through supabase settings
     try {
       const { user, session, error } = await supabase.auth.signUp({
         email,

@@ -1,11 +1,12 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { supabase } from '@/lib/supabaseClient';
+// import { supabase } from '@/lib/supabaseClient';
 import { gql, useQuery } from '@apollo/client';
 
 import Editor from '@/components/Editor';
 import Button from '@/components/common/Button';
 import P from '@/components/common/P';
+import Spinner from '@/components/Spinner';
 
 const POST_QUERY = gql`
   query MyQuery {
@@ -18,22 +19,21 @@ const POST_QUERY = gql`
 `;
 
 const Home: NextPage = () => {
-  // const user = supabase.auth.user();
-  // const session = supabase.auth.session();
+  const { data: postData, loading: postLoading, error: postError } = useQuery(POST_QUERY);
 
-  // console.log({ user });
-
-  const { data, loading, error } = useQuery(POST_QUERY);
-
-  if (loading) {
-    return <P variant="p1">Loading...</P>;
+  if (!postData) {
+    return null;
   }
 
-  if (error) {
-    return <p>something went wrong...</p>;
+  if (postLoading) {
+    return <Spinner />;
   }
 
-  console.log(data);
+  if (postError) {
+    return <P variant="p1">something went wrong...</P>;
+  }
+
+  // console.log(data);
 
   return (
     <div>
