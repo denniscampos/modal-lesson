@@ -36,3 +36,7 @@ Create a `.env` file and a local instance DB:
 
 run `npm run db:migrate`
 run `npm run db:seed`
+
+##### few notes
+
+stepzen start to watch graphql schema changes
