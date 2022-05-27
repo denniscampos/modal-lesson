@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { useForm } from 'react-hook-form';
 
 import { GetServerSideProps } from 'next';
-import { signIn, getProviders } from 'next-auth/react';
 
 import Label from '@/components/common/Label';
 import Input from '@/components/common/Input';

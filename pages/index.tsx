@@ -1,16 +1,8 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { gql } from '@apollo/client';
+
 import Editor from '@/components/Editor';
 import Button from '@/components/common/Button';
-
-gql`
-  query DraftQuery {
-    drafts {
-      body
-    }
-  }
-`;
 
 const Home: NextPage = () => {
   return (
