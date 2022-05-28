@@ -15,6 +15,8 @@ module.exports = {
         tertiary: 'var(--color-tertiary)',
         quaternary: 'var(--color-quaternary)',
         quinary: 'var(--color-quinary)',
+
+        danger: 'var(--button-danger)',
       },
       textColor: {
         primary: 'var(--color-text-primary)',

@@ -1,15 +1,28 @@
+/* eslint-disable @next/next/no-img-element */
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import { PlusSmIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Button from '@/components/common/Button';
+import { supabase } from '@/lib/supabaseClient';
+import toast, { Toaster } from 'react-hot-toast';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function Navbar() {
+  const user = supabase.auth.user();
+  const router = useRouter();
+
+  //TODO: React-hot-toast is set up for now. Use the useEffect hook to listen for user signin/signout.
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    toast.success('successful');
+  };
+
   return (
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
@@ -50,13 +63,10 @@ export default function Navbar() {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <button
-                    type="button"
-                    className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary shadow-sm hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
+                  <Button className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary shadow-sm hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     <PlusSmIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                     <span>New Post</span>
-                  </button>
+                  </Button>
                 </div>
                 <div className="hidden md:ml-4 md:flex-shrink-0 md:flex md:items-center">
                   <button
@@ -117,15 +127,33 @@ export default function Navbar() {
                         </Menu.Item>
                         <Menu.Item>
                           {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
+                            <>
+                              {user ? (
+                                <>
+                                  <button
+                                    onClick={signOut}
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block px-4 py-2 text-sm text-gray-700'
+                                    )}
+                                  >
+                                    Sign out
+                                  </button>
+                                  <Toaster />
+                                </>
+                              ) : (
+                                <a
+                                  href="#"
+                                  onClick={() => router.push('/login')}
+                                  className={classNames(
+                                    active ? 'bg-gray-100' : '',
+                                    'block px-4 py-2 text-sm text-gray-700'
+                                  )}
+                                >
+                                  Sign in
+                                </a>
                               )}
-                            >
-                              Sign out
-                            </a>
+                            </>
                           )}
                         </Menu.Item>
                       </Menu.Items>
@@ -220,7 +248,12 @@ export default function Navbar() {
   );
 }
 
-function DesktopMenu({ ...props }) {
+interface DesktopMenuProps {
+  link: string;
+  text: string;
+}
+
+function DesktopMenu({ link, text }: DesktopMenuProps) {
   const router = useRouter();
 
   const activeStyles =
@@ -230,8 +263,8 @@ function DesktopMenu({ ...props }) {
     'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium';
 
   return (
-    <Link href={props.link}>
-      <a className={router.asPath === props.link ? activeStyles : inactiveStyles}>{props.text}</a>
+    <Link href={link}>
+      <a className={router.asPath === link ? activeStyles : inactiveStyles}>{text}</a>
     </Link>
   );
 }

@@ -9,11 +9,12 @@ import { useRouter } from 'next/router';
 function MyApp({ Component, pageProps: { ...pageProps } }: AppProps) {
   const router = useRouter();
 
-  const loginPage = router.pathname === '/login' ? false : true;
+  const loginOrRegisterPage =
+    router.pathname === '/login' || router.pathname === '/register' ? false : true;
 
   return (
     <ApolloProvider client={client}>
-      {loginPage && <Navbar />}
+      {loginOrRegisterPage && <Navbar />}
       <MainLayout>
         <Component {...pageProps} />
       </MainLayout>

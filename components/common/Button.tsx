@@ -2,7 +2,7 @@ import React from 'react';
 
 export type ButtonProps = {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'quinary';
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'quinary' | 'danger';
   onClick?: () => void; //keep an eye on this..
   disabled?: boolean;
   className?: string;
@@ -28,6 +28,8 @@ function getVariant(variant: ButtonProps['variant']) {
       return `${commonStyles} bg-primary hover:bg-secondary disabled:opacity-20 disabled:pointer-events-none`;
     case 'secondary':
       return `${commonStyles} bg-secondary disabled:opacity-20 disabled:pointer-events-none`;
+    case 'danger':
+      return `${commonStyles} bg-danger disabled:opacity-20 disabled:pointer-events-none`;
     default:
       return '';
   }
