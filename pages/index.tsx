@@ -1,10 +1,8 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-// import { supabase } from '@/lib/supabaseClient';
 import { gql, useQuery } from '@apollo/client';
 
 import Editor from '@/components/Editor';
-import Button from '@/components/common/Button';
 import P from '@/components/common/P';
 import Spinner from '@/components/Spinner';
 
@@ -33,8 +31,6 @@ const Home: NextPage = () => {
     return <P variant="p1">something went wrong...</P>;
   }
 
-  // console.log(data);
-
   return (
     <div>
       <Head>
@@ -44,15 +40,7 @@ const Home: NextPage = () => {
       </Head>
 
       <h1 className="text-orange-600 text-7xl">MODAL LESSON VIBES! 🚀</h1>
-      <h2 className="bg-primary text-6xl">asdf</h2>
-      <h2 className="bg-secondary text-6xl">asdf</h2>
-      <h2 className="bg-tertiary text-6xl">asdf</h2>
-      <h2 className="bg-quaternary text-6xl">asdf</h2>
-      <h2 className="bg-quinary text-6xl">asdf</h2>
 
-      <Button variant="primary">Submit</Button>
-
-      <h3 className="text-secondary">Hello World</h3>
       <Editor />
     </div>
   );

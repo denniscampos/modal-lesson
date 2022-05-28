@@ -2,6 +2,8 @@ import { useState } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import dynamic from 'next/dynamic';
 
+//double header is showing due to react 18.... keeping an eye on a merge
+// https://github.com/zenoamaro/react-quill/pull/793
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const modulesQuill = {
@@ -32,8 +34,7 @@ const Editor = () => {
   const [value, setValue] = useState('');
 
   return (
-    <div>
-      <h1>Editor component</h1>
+    <>
       <ReactQuill
         theme="snow"
         value={value}
@@ -41,7 +42,7 @@ const Editor = () => {
         modules={modulesQuill}
         formats={formatsQuill}
       />
-    </div>
+    </>
   );
 };
 
