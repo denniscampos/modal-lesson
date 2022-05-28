@@ -5,9 +5,8 @@
 - NextJS
 - Typescript
 - TailwindCSS
-- Prisma / PostgreSQL
+- Supabase / StepZen
 - Apollo / GraphQL
-- NexusJS
 
 Description of app coming soon:
 

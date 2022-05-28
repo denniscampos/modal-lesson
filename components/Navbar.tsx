@@ -2,6 +2,8 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import { PlusSmIcon } from '@heroicons/react/solid';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -39,36 +41,12 @@ export default function Navbar() {
                   />
                 </div>
                 <div className="hidden md:ml-6 md:flex md:space-x-8">
-                  <DisclosureButton activeText="Dashboard" inActiveText="hey" />
-                  {/* <DisclosureButton inActiveText="Team" /> */}
+                  {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
+                  <DesktopMenu link="/" text="Dashboard" />
+                  <DesktopMenu link="/#team" text="Team" />
+                  <DesktopMenu link="/#projects" text="Projects" />
+                  <DesktopMenu link="/#calendar" text="Calendar" />
                 </div>
-                {/* <div className="hidden md:ml-6 md:flex md:space-x-8"> */}
-                {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-                {/* <a
-                    href="#"
-                    className="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    Dashboard
-                  </a>
-                  <a
-                    href="#"
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    Team
-                  </a>
-                  <a
-                    href="#"
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    Projects
-                  </a>
-                  <a
-                    href="#"
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    Calendar
-                  </a>
-                </div> */}
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -242,22 +220,18 @@ export default function Navbar() {
   );
 }
 
-function DisclosureButton({ ...props }) {
+function DesktopMenu({ ...props }) {
+  const router = useRouter();
+
   const activeStyles =
     'border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium';
 
-  const inActiveStyles =
+  const inactiveStyles =
     'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium';
 
   return (
-    <>
-      {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-      <a href="#" className={`${activeStyles}`}>
-        {props.activeText}
-      </a>
-      <a href="#" className={`${inActiveStyles}`}>
-        {props.inActiveText}
-      </a>
-    </>
+    <Link href={props.link}>
+      <a className={router.asPath === props.link ? activeStyles : inactiveStyles}>{props.text}</a>
+    </Link>
   );
 }
