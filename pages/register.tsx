@@ -10,6 +10,7 @@ import Label from '@/components/common/Label';
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -17,21 +18,22 @@ const Register = () => {
     e.preventDefault();
     // in production need to enable email confirmations through supabase settings
     try {
-      const { user, session, error } = await supabase.auth.signUp({
+      setLoading(true);
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       });
 
-      console.log({ user });
-      console.log({ session });
-
       router.push('/login');
 
       if (error) {
-        console.log('Something went wrong: ', error);
+        alert(error);
+        console.error(error);
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,9 +101,10 @@ const Register = () => {
               <div>
                 <button
                   type="submit"
+                  disabled={loading}
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  Sign Up
+                  {loading ? 'loading...' : 'Sign Up'}
                 </button>
               </div>
             </form>
