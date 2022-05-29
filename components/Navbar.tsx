@@ -99,38 +99,14 @@ export default function Navbar() {
                       leaveTo="transform opacity-0 scale-95"
                     >
                       <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              Your Profile
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              Settings
-                            </a>
-                          )}
-                        </Menu.Item>
+                        <DesktopSettings link="#" text="Your Profile" />
+                        <DesktopSettings link="#" text="Settings" />
                         <Menu.Item>
                           {({ active }) => (
                             <>
                               {user ? (
                                 <>
-                                  <button
+                                  <Button
                                     onClick={signOut}
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
@@ -138,7 +114,7 @@ export default function Navbar() {
                                     )}
                                   >
                                     Sign out
-                                  </button>
+                                  </Button>
                                   <Toaster />
                                 </>
                               ) : (
@@ -265,5 +241,29 @@ function MobileMenu({ link, text }: MobileMenuProps) {
         {text}
       </Disclosure.Button>
     </Link>
+  );
+}
+
+interface DesktopSettingsProps {
+  text: string;
+  link: string;
+}
+
+function DesktopSettings({ link, text }: DesktopSettingsProps) {
+  return (
+    <Menu.Item>
+      {({ active }) => (
+        <Link href={link}>
+          <a
+            className={classNames(
+              active ? 'bg-gray-100' : '',
+              'block px-4 py-2 text-sm text-gray-700'
+            )}
+          >
+            {text}
+          </a>
+        </Link>
+      )}
+    </Menu.Item>
   );
 }
