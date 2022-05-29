@@ -167,34 +167,10 @@ export default function Navbar() {
           <Disclosure.Panel className="md:hidden">
             <div className="pt-2 pb-3 space-y-1">
               {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
-              <Disclosure.Button
-                as="a"
-                href="#"
-                className="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6"
-              >
-                Dashboard
-              </Disclosure.Button>
-              <Disclosure.Button
-                as="a"
-                href="#"
-                className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6"
-              >
-                Team
-              </Disclosure.Button>
-              <Disclosure.Button
-                as="a"
-                href="#"
-                className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6"
-              >
-                Projects
-              </Disclosure.Button>
-              <Disclosure.Button
-                as="a"
-                href="#"
-                className="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6"
-              >
-                Calendar
-              </Disclosure.Button>
+              <MobileMenu link="/#dashboard" text="Dashboard" />
+              <MobileMenu link="/#team" text="Team" />
+              <MobileMenu link="/#projects" text="Projects" />
+              <MobileMenu link="/#calendar" text="Calendar" />
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="flex items-center px-4 sm:px-6">
@@ -248,6 +224,7 @@ export default function Navbar() {
   );
 }
 
+// I think we can combined the two functions into one with something like isMobile ? etc...
 interface DesktopMenuProps {
   link: string;
   text: string;
@@ -265,6 +242,28 @@ function DesktopMenu({ link, text }: DesktopMenuProps) {
   return (
     <Link href={link}>
       <a className={router.asPath === link ? activeStyles : inactiveStyles}>{text}</a>
+    </Link>
+  );
+}
+
+interface MobileMenuProps {
+  link: string;
+  text: string;
+}
+
+function MobileMenu({ link, text }: MobileMenuProps) {
+  const router = useRouter();
+
+  const activeStyles =
+    'bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6';
+  const inactiveStyles =
+    'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6';
+
+  return (
+    <Link href={link}>
+      <Disclosure.Button as="a" className={router.asPath === link ? activeStyles : inactiveStyles}>
+        {text}
+      </Disclosure.Button>
     </Link>
   );
 }
