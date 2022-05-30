@@ -39,7 +39,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 className="text-orange-600 text-7xl">MODAL LESSON VIBES! 🚀</h1>
+      <h1 className="text-orange-600 text-7xl cypressTest">MODAL LESSON VIBES! 🚀</h1>
 
       <Editor />
     </div>
