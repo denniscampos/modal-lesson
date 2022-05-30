@@ -100,7 +100,7 @@ export default function Navbar() {
                     >
                       <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <DesktopSettings link="#" text="Your Profile" />
-                        <DesktopSettings link="#" text="Settings" />
+                        <DesktopSettings link="/settings" text="Settings" />
                         <Menu.Item>
                           {({ active }) => (
                             <>
