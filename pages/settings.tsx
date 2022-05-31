@@ -1,45 +1,69 @@
 import { supabase } from '@/lib/supabaseClient';
 import React, { useEffect, useState } from 'react';
+// import useDebounce from '@/hooks/useDebounce';
 
-export default function Example() {
-  const [website, setWebsite] = useState('');
+// interface ProfileProps {
+//   website?: string;
+//   about?: string;
+//   firstName?: string;
+//   lastName?: string;
+//   email?: string;
+// }
+
+export default function Settings() {
+  const [website, setWebsite] = useState(null);
   const [about, setAbout] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [profileId, setProfileId] = useState(null);
+  //   const [profileId, setProfileId] = useState(null);
+  const [username, setUsername] = useState(null);
+  //   const [profileData, setProfileData] = useState<ProfileProps>();
 
-  const user = supabase.auth.user();
+  //   const debouncedWebsite = useDebounce<string>(website, 500);
+  //   const debouncedAbout = useDebounce<string>(about, 500);
+  //   const debouncedFirstName = useDebounce<string>(firstName, 500);
+  //   const debouncedLastName = useDebounce<string>(lastName, 500);
+  //   const debouncedEmail = useDebounce<string>(email, 500);
 
   useEffect(() => {
+    const user = supabase.auth.user();
     const fetchProfileData = async () => {
-      const { data, error } = await supabase.from('profile').select();
+      try {
+        setLoading(true);
+        const { data, error, status } = await supabase
+          .from('profile')
+          .select('website')
+          .eq('id', user?.id);
 
-      if (!data) {
-        return null;
-      }
+        if (error && status !== 406) {
+          throw error;
+        }
 
-      setProfileId(data[0]?.id);
+        if (!data) return;
 
-      if (error) {
-        console.log('something went wrong: ', error);
+        if (data) {
+          //   setProfileId(data.id);
+          setWebsite(data.website);
+          setUsername(data.username);
+        }
+      } catch (error) {
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProfileData();
   }, []);
 
-  // TODO: figure out how to update profileID when updating profile info.
-
-  const createOrUpdateProfile = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-
+  const createOrUpdateProfile = async () => {
+    const user = supabase.auth.user();
     try {
       setLoading(true);
       const { error } = await supabase.from('profile').upsert({
-        id: profileId,
-        user: user?.id,
+        id: user?.id,
+        username,
         first_name: firstName,
         last_name: lastName,
         website,
@@ -51,6 +75,7 @@ export default function Example() {
 
       if (error) {
         alert(error);
+        // eslint-disable-next-line no-console
         console.log(error);
       }
     } catch (error) {
@@ -60,8 +85,14 @@ export default function Example() {
       setLoading(false);
     }
   };
+
+  //   if (!profileData) {
+  //     return null;
+  //   }
+
   return (
-    <form className="space-y-8 divide-y divide-gray-200" onSubmit={createOrUpdateProfile}>
+    // <form className="space-y-8 divide-y divide-gray-200" onSubmit={createOrUpdateProfile}>
+    <>
       <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
         <div>
           <div>
@@ -88,6 +119,7 @@ export default function Example() {
                     type="text"
                     name="website"
                     id="website"
+                    value={website || ''}
                     autoComplete="website"
                     className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
                     onChange={(e) => setWebsite(e.target.value)}
@@ -207,6 +239,7 @@ export default function Example() {
                   name="first-name"
                   id="first-name"
                   autoComplete="given-name"
+                  //   value={firstName}
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setFirstName(e.target.value)}
                 />
@@ -226,6 +259,7 @@ export default function Example() {
                   name="last-name"
                   id="last-name"
                   autoComplete="family-name"
+                  //   value={lastName}
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setLastName(e.target.value)}
                 />
@@ -245,6 +279,7 @@ export default function Example() {
                   name="email"
                   type="email"
                   autoComplete="email"
+                  //   value={email}
                   className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -417,6 +452,7 @@ export default function Example() {
           </button>
           <button
             disabled={loading}
+            onClick={createOrUpdateProfile}
             type="submit"
             className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
@@ -424,6 +460,7 @@ export default function Example() {
           </button>
         </div>
       </div>
-    </form>
+    </>
+    // </form>
   );
 }
