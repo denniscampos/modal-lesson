@@ -2,51 +2,40 @@ import { supabase } from '@/lib/supabaseClient';
 import React, { useEffect, useState } from 'react';
 // import useDebounce from '@/hooks/useDebounce';
 
-// interface ProfileProps {
-//   website?: string;
-//   about?: string;
-//   firstName?: string;
-//   lastName?: string;
-//   email?: string;
-// }
-
 export default function Settings() {
-  const [website, setWebsite] = useState(null);
+  const [website, setWebsite] = useState('');
   const [about, setAbout] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  //   const [profileId, setProfileId] = useState(null);
-  const [username, setUsername] = useState(null);
-  //   const [profileData, setProfileData] = useState<ProfileProps>();
 
-  //   const debouncedWebsite = useDebounce<string>(website, 500);
-  //   const debouncedAbout = useDebounce<string>(about, 500);
-  //   const debouncedFirstName = useDebounce<string>(firstName, 500);
-  //   const debouncedLastName = useDebounce<string>(lastName, 500);
-  //   const debouncedEmail = useDebounce<string>(email, 500);
+  // const debouncedWebsite = useDebounce<string>(website, 500);
+  // const debouncedAbout = useDebounce<string>(about, 500);
+  // const debouncedFirstName = useDebounce<string>(firstName, 500);
+  // const debouncedLastName = useDebounce<string>(lastName, 500);
+  // const debouncedEmail = useDebounce<string>(email, 500);
 
   useEffect(() => {
-    const user = supabase.auth.user();
     const fetchProfileData = async () => {
       try {
         setLoading(true);
-        const { data, error, status } = await supabase
-          .from('profile')
-          .select('website')
-          .eq('id', user?.id);
+        const { data, error, status } = await supabase.from('profile').select();
 
         if (error && status !== 406) {
           throw error;
         }
 
-        if (!data) return;
+        if (!data) return null;
+
+        const { about, first_name, last_name, email } = data[0];
 
         if (data) {
-          //   setProfileId(data.id);
-          setWebsite(data.website);
-          setUsername(data.username);
+          setWebsite(data[0]?.website);
+          setAbout(about);
+          setFirstName(first_name);
+          setLastName(last_name);
+          setEmail(email);
         }
       } catch (error) {
       } finally {
@@ -61,15 +50,18 @@ export default function Settings() {
     const user = supabase.auth.user();
     try {
       setLoading(true);
-      const { error } = await supabase.from('profile').upsert({
-        id: user?.id,
-        username,
-        first_name: firstName,
-        last_name: lastName,
-        website,
-        about,
-        email,
-      });
+      const { error } = await supabase.from('profile').upsert(
+        {
+          id: user?.id,
+
+          first_name: firstName,
+          last_name: lastName,
+          website,
+          about,
+          email,
+        },
+        { returning: 'minimal' }
+      );
 
       //TODO: Show toast message when success for better user experience
 
@@ -141,7 +133,7 @@ export default function Settings() {
                   name="about"
                   rows={3}
                   className="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
-                  defaultValue={''}
+                  value={about || ''}
                   onChange={(e) => setAbout(e.target.value)}
                 />
                 <p className="mt-2 text-sm text-gray-500">Write a few sentences about yourself.</p>
@@ -239,7 +231,7 @@ export default function Settings() {
                   name="first-name"
                   id="first-name"
                   autoComplete="given-name"
-                  //   value={firstName}
+                  value={firstName || ''}
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setFirstName(e.target.value)}
                 />
@@ -259,7 +251,7 @@ export default function Settings() {
                   name="last-name"
                   id="last-name"
                   autoComplete="family-name"
-                  //   value={lastName}
+                  value={lastName || ''}
                   className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setLastName(e.target.value)}
                 />
@@ -279,7 +271,7 @@ export default function Settings() {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  //   value={email}
+                  value={email || ''}
                   className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setEmail(e.target.value)}
                 />
