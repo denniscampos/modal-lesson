@@ -28,10 +28,10 @@ export default function Settings() {
 
         if (!data) return null;
 
-        const { about, first_name, last_name, email } = data[0];
+        const { website, about, first_name, last_name, email } = data[0];
 
         if (data) {
-          setWebsite(data[0]?.website);
+          setWebsite(website);
           setAbout(about);
           setFirstName(first_name);
           setLastName(last_name);

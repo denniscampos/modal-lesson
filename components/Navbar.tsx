@@ -13,7 +13,11 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function Navbar() {
+interface AuthProps {
+  auth?: string;
+}
+
+export default function Navbar({ auth }: AuthProps) {
   const user = supabase.auth.user();
   const router = useRouter();
 
@@ -57,8 +61,12 @@ export default function Navbar() {
                   {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                   <DesktopMenu link="/" text="Dashboard" />
                   <DesktopMenu link="/#team" text="Team" />
-                  <DesktopMenu link="/#projects" text="Projects" />
+                  {auth === 'not-authenticated' ? (
+                    <DesktopMenu link="/#projects" text="Projects" />
+                  ) : null}
+                  {/* <DesktopMenu link="/#projects" text="Projects" /> */}
                   <DesktopMenu link="/#calendar" text="Calendar" />
+                  <DesktopMenu link="/protected" text="Protected" />
                 </div>
               </div>
               <div className="flex items-center">
