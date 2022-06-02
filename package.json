@@ -16,6 +16,8 @@
     "@apollo/client": "^3.6.5",
     "@headlessui/react": "^1.6.3",
     "@heroicons/react": "^1.0.6",
+    "@hookform/error-message": "^2.0.0",
+    "@hookform/resolvers": "^2.8.10",
     "@supabase/supabase-js": "^1.35.3",
     "graphql": "^16.5.0",
     "micro": "^9.3.4",
@@ -23,7 +25,8 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-hook-form": "^7.31.2",
-    "react-hot-toast": "^2.2.0"
+    "react-hot-toast": "^2.2.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/node": "^17.0.33",

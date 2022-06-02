@@ -1,6 +1,23 @@
 import { supabase } from '@/lib/supabaseClient';
 import React, { useEffect, useState } from 'react';
 // import useDebounce from '@/hooks/useDebounce';
+import { gql, useQuery } from '@apollo/client';
+import Spinner from '@/components/Spinner';
+import Input from '@/components/common/Input';
+
+const GET_PROFILE = gql`
+  query ProfileData {
+    getProfileList {
+      id
+      about
+      email
+      first_name
+      last_name
+      website
+      updated_at
+    }
+  }
+`;
 
 export default function Settings() {
   const [website, setWebsite] = useState('');
@@ -45,6 +62,20 @@ export default function Settings() {
 
     fetchProfileData();
   }, []);
+
+  const { data: profileData, loading: profileLoading, error: profileError } = useQuery(GET_PROFILE);
+
+  if (!profileData) {
+    return null;
+  }
+
+  if (profileLoading) {
+    return <Spinner />;
+  }
+
+  if (profileError) {
+    return <p className="text-red-500">ERRORRRRRRR :( </p>;
+  }
 
   const createOrUpdateProfile = async () => {
     const user = supabase.auth.user();
@@ -226,13 +257,13 @@ export default function Settings() {
                 First name
               </label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
+                <Input
                   type="text"
                   name="first-name"
                   id="first-name"
-                  autoComplete="given-name"
+                  // autoComplete="given-name"
                   value={firstName || ''}
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
+                  // className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setFirstName(e.target.value)}
                 />
               </div>

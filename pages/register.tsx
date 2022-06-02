@@ -1,27 +1,52 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-// import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Heading from '@/components/common/Heading';
 import Link from 'next/link';
 import Label from '@/components/common/Label';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { ErrorMessage } from '@hookform/error-message';
+
+interface DataProps {
+  email: string;
+  password: string;
+}
+
+const schema = yup.object().shape({
+  email: yup.string().email().required('Email is required'),
+});
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  const createNewUser = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    // watch,
+    formState: { errors },
+  } = useForm<DataProps>({
+    mode: 'onSubmit',
+    resolver: yupResolver(schema),
+  });
+
+  {
+    console.log(errors.email);
+  }
+
+  const createNewUser = async (data: DataProps) => {
     // in production need to enable email confirmations through supabase settings
     try {
       setLoading(true);
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: data.email,
+        password: data.password,
       });
 
       router.push('/login');
@@ -53,21 +78,34 @@ const Register = () => {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" action="#" method="POST" onSubmit={createNewUser}>
+            <form
+              className="space-y-6"
+              action="#"
+              method="POST"
+              onSubmit={handleSubmit(createNewUser)}
+            >
               <div>
                 <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Email address
                 </Label>
                 <div className="mt-1">
                   <input
-                    id="email"
-                    name="email"
+                    // id="email"
+                    // // name="email"
                     type="email"
-                    autoComplete="email"
-                    required
+                    // autoComplete="email"
+                    // required
+                    {...register('email', { required: true })}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    onChange={(e) => setEmail(e.target.value)}
+                    // onChange={(e) => setEmail(e.target.value)}
                   />
+                  <ErrorMessage
+                    errors={errors}
+                    name="email"
+                    render={({ message }) => <p>{message}</p>}
+                  />
+
+                  {/* {errors?.email && <p className="text-red-500">{errors?.email.message}</p>} */}
                 </div>
               </div>
 
@@ -83,7 +121,7 @@ const Register = () => {
                     autoComplete="current-password"
                     required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    onChange={(e) => setPassword(e.target.value)}
+                    // onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>

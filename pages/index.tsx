@@ -5,6 +5,7 @@ import { gql, useQuery } from '@apollo/client';
 import Editor from '@/components/Editor';
 import P from '@/components/common/P';
 import Spinner from '@/components/Spinner';
+import Heading from '@/components/common/Heading';
 
 const POST_QUERY = gql`
   query MyQuery {
@@ -39,7 +40,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 className="text-orange-600 text-7xl cypressTest">MODAL LESSON VIBES! 🚀</h1>
+      <Heading variant="h1" className="text-primary text-7xl cypressTest">
+        MODAL LESSON VIBES! 🚀
+      </Heading>
 
       <Editor />
     </div>
