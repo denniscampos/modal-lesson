@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Button from '@/components/common/Button';
 import { supabase } from '@/lib/supabaseClient';
-import toast, { Toaster } from 'react-hot-toast';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -21,10 +20,18 @@ export default function Navbar({ auth }: AuthProps) {
   const user = supabase.auth.user();
   const router = useRouter();
 
-  //TODO: React-hot-toast is set up for now. Use the useEffect hook to listen for user signin/signout.
   const signOut = async () => {
-    await supabase.auth.signOut();
-    toast.success('successful');
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      router.push('/login');
+
+      if (error) {
+        console.error(error);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -123,7 +130,7 @@ export default function Navbar({ auth }: AuthProps) {
                                   >
                                     Sign out
                                   </Button>
-                                  <Toaster />
+                                  {/* <Toaster /> */}
                                 </>
                               ) : (
                                 <a
