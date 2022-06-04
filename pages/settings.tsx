@@ -5,6 +5,7 @@ import { gql, useQuery } from '@apollo/client';
 import Spinner from '@/components/Spinner';
 import Input from '@/components/common/Input';
 import { Avatar } from '@/components/Avatar';
+import { GetServerSideProps } from 'next';
 
 const GET_PROFILE = gql`
   query ProfileData {
@@ -48,8 +49,6 @@ export default function Settings() {
         if (!data) return null;
 
         const { website, about, first_name, last_name, email, avatar_url } = data[0];
-
-        console.log('avatar', avatar_url);
 
         if (data) {
           setWebsite(website);
@@ -427,3 +426,18 @@ export default function Settings() {
     // </form>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { user } = await supabase.auth.api.getUserByCookie(req);
+
+  if (!user) {
+    return {
+      props: {},
+      redirect: { destination: '/login' },
+    };
+  }
+
+  return {
+    props: { user },
+  };
+};
