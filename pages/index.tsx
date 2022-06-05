@@ -2,10 +2,10 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { gql, useQuery } from '@apollo/client';
 
-import Editor from '@/components/Editor';
 import P from '@/components/common/P';
 import Spinner from '@/components/Spinner';
 import Heading from '@/components/common/Heading';
+import Editor from '@/components/Editor';
 
 const POST_QUERY = gql`
   query MyQuery {
@@ -44,7 +44,9 @@ const Home: NextPage = () => {
         MODAL LESSON VIBES! 🚀
       </Heading>
 
-      <Editor />
+      <div className="mt-10">
+        <Editor />
+      </div>
     </div>
   );
 };
