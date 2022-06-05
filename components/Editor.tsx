@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 
-// import { PlainTextPlugin as LexicalPlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
 import { RichTextPlugin as LexicalRichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable as LexicalContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
