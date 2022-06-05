@@ -6,6 +6,7 @@ interface ProtectedProps {
 }
 
 export default function Profile({ user }: ProtectedProps) {
+  // eslint-disable-next-line no-console
   console.log({ user });
 
   return (

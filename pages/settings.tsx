@@ -5,6 +5,8 @@ import { gql, useQuery } from '@apollo/client';
 import Spinner from '@/components/Spinner';
 import Input from '@/components/common/Input';
 import { Avatar } from '@/components/Avatar';
+import { GetServerSideProps } from 'next';
+import Label from '@/components/common/Label';
 
 const GET_PROFILE = gql`
   query ProfileData {
@@ -48,8 +50,6 @@ export default function Settings() {
         if (!data) return null;
 
         const { website, about, first_name, last_name, email, avatar_url } = data[0];
-
-        console.log('avatar', avatar_url);
 
         if (data) {
           setWebsite(website);
@@ -128,24 +128,23 @@ export default function Settings() {
 
           <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
+              <Label
                 htmlFor="website"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
                 Website
-              </label>
+              </Label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <div className="max-w-lg flex rounded-md shadow-sm">
                   <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
                     https://
                   </span>
-                  <input
+                  <Input
                     type="text"
                     name="website"
                     id="website"
                     value={website || ''}
                     autoComplete="website"
-                    className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300"
                     onChange={(e) => setWebsite(e.target.value)}
                   />
                 </div>
@@ -153,12 +152,12 @@ export default function Settings() {
             </div>
 
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
+              <Label
                 htmlFor="about"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
                 About
-              </label>
+              </Label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <textarea
                   id="about"
@@ -190,60 +189,57 @@ export default function Settings() {
           </div>
           <div className="space-y-6 sm:space-y-5">
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
+              <Label
                 htmlFor="first-name"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
                 First name
-              </label>
+              </Label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <Input
                   type="text"
                   name="first-name"
                   id="first-name"
-                  // autoComplete="given-name"
+                  autoComplete="given-name"
                   value={firstName || ''}
-                  // className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setFirstName(e.target.value)}
                 />
               </div>
             </div>
 
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
+              <Label
                 htmlFor="last-name"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
                 Last name
-              </label>
+              </Label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
+                <Input
                   type="text"
                   name="last-name"
                   id="last-name"
                   autoComplete="family-name"
                   value={lastName || ''}
-                  className="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </div>
             </div>
 
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-              <label
+              <Label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
               >
                 Email address
-              </label>
+              </Label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
-                <input
+                <Input
                   id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   value={email || ''}
-                  className="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -427,3 +423,18 @@ export default function Settings() {
     // </form>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { user } = await supabase.auth.api.getUserByCookie(req);
+
+  if (!user) {
+    return {
+      props: {},
+      redirect: { destination: '/login' },
+    };
+  }
+
+  return {
+    props: { user },
+  };
+};
