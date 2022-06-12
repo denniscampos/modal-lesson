@@ -1,7 +1,9 @@
 import { supabase } from '@/lib/supabaseClient';
 import React, { useEffect, useState } from 'react';
-// import useDebounce from '@/hooks/useDebounce';
 import { gql, useQuery } from '@apollo/client';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import useDebounce from '@/hooks/useDebounce';
 import Spinner from '@/components/Spinner';
 import Input from '@/components/common/Input';
 import { Avatar } from '@/components/Avatar';
@@ -31,7 +33,7 @@ export default function Settings() {
   const [avatar_url, setAvatarUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // const debouncedWebsite = useDebounce<string>(website, 500);
+  // const debouncedWebsite = useDebounce<string>(website, 2000);
   // const debouncedAbout = useDebounce<string>(about, 500);
   // const debouncedFirstName = useDebounce<string>(firstName, 500);
   // const debouncedLastName = useDebounce<string>(lastName, 500);
@@ -41,15 +43,22 @@ export default function Settings() {
     const fetchProfileData = async () => {
       try {
         setLoading(true);
-        const { data, error, status } = await supabase.from('profile').select();
+
+        const user = supabase.auth.user();
+
+        const { data, error, status } = await supabase
+          .from('profile')
+          .select('*')
+          .eq('id', user?.id)
+          .single();
+
+        if (!data) return null;
 
         if (error && status !== 406) {
           throw error;
         }
 
-        if (!data) return null;
-
-        const { website, about, first_name, last_name, email, avatar_url } = data[0];
+        const { website, about, first_name, last_name, email, avatar_url } = data;
 
         if (data) {
           setWebsite(website);
@@ -100,6 +109,16 @@ export default function Settings() {
       const { error } = await supabase
         .from('profile')
         .upsert(PROFILE_DATA, { returning: 'minimal' });
+
+      toast.success('Settings saved! 🚀', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
       if (error) {
         alert(error);
@@ -417,6 +436,7 @@ export default function Settings() {
           >
             {loading ? 'Loading...' : 'Save'}
           </button>
+          <ToastContainer />
         </div>
       </div>
     </>

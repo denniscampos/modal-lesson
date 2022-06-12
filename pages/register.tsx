@@ -10,6 +10,7 @@ import Heading from '@/components/common/Heading';
 import Label from '@/components/common/Label';
 import SocialMediaIcon from '@/components/SocialMediaIcon';
 import { schema } from '../validation/schemaResolver';
+import { ErrorMessage } from '@hookform/error-message';
 interface DataProps {
   email: string;
   password: string;
@@ -26,7 +27,7 @@ const Register = () => {
     // watch,
     formState: { errors },
   } = useForm<DataProps>({
-    // mode: 'onSubmit',
+    mode: 'onTouched',
     resolver: yupResolver(schema),
   });
 
@@ -81,7 +82,11 @@ const Register = () => {
                     {...register('email', { required: true })}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                  {errors?.email && <p className="text-red-500">{errors?.email?.message}</p>}
+                  <ErrorMessage
+                    errors={errors}
+                    name="email"
+                    render={() => <p className="text-red-500">Valid email is required.</p>}
+                  />
                 </div>
               </div>
 
@@ -99,7 +104,13 @@ const Register = () => {
                     required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                  {errors?.password && <p className="text-red-500">{errors?.password.message}</p>}
+                  <ErrorMessage
+                    errors={errors}
+                    name="password"
+                    render={() => (
+                      <p className="text-red-500">Password must be a min of 4 characters.</p>
+                    )}
+                  />
                 </div>
               </div>
 
