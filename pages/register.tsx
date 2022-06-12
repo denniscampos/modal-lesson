@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { supabase } from '@/lib/supabaseClient';
 import Heading from '@/components/common/Heading';
@@ -11,6 +12,7 @@ import Label from '@/components/common/Label';
 import SocialMediaIcon from '@/components/SocialMediaIcon';
 import { schema } from '../validation/schemaResolver';
 import { ErrorMessage } from '@hookform/error-message';
+
 interface DataProps {
   email: string;
   password: string;
@@ -24,7 +26,6 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    // watch,
     formState: { errors },
   } = useForm<DataProps>({
     mode: 'onTouched',
@@ -40,10 +41,21 @@ const Register = () => {
         password: data.password,
       });
 
-      router.push('/login');
+      if (!error) {
+        router.push('/login');
+      }
 
       if (error) {
-        alert(error);
+        toast.error(error.message, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
         console.error(error);
       }
     } catch (error) {
@@ -97,7 +109,6 @@ const Register = () => {
                 <div className="mt-1">
                   <input
                     id="password"
-                    // name="password"
                     type="password"
                     {...register('password', { required: true })}
                     autoComplete="current-password"
@@ -132,6 +143,7 @@ const Register = () => {
                 >
                   {loading ? 'loading...' : 'Sign Up'}
                 </button>
+                <ToastContainer />
               </div>
             </form>
 

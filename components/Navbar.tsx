@@ -20,6 +20,19 @@ export default function Navbar({ auth }: AuthProps) {
   const user = supabase.auth.user();
   const router = useRouter();
 
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const { error } = await supabase.from('profile').select('*').eq('id', user?.id).single();
+  //     //TODO: add state management to bring Avatar URL from profile
+
+  //     if (error) {
+  //       throw error;
+  //     }
+  //   };
+
+  //   fetchUser();
+  // }, []);
+
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -240,9 +253,10 @@ function DesktopMenu({ link, text }: DesktopMenuProps) {
 interface MobileMenuProps {
   link: string;
   text: string;
+  onClick?: () => void;
 }
 
-function MobileMenu({ link, text }: MobileMenuProps) {
+function MobileMenu({ link, text, onClick }: MobileMenuProps) {
   const router = useRouter();
 
   const activeStyles =
@@ -252,7 +266,11 @@ function MobileMenu({ link, text }: MobileMenuProps) {
 
   return (
     <Link href={link}>
-      <Disclosure.Button as="a" className={router.asPath === link ? activeStyles : inactiveStyles}>
+      <Disclosure.Button
+        as="a"
+        onClick={onClick}
+        className={router.asPath === link ? activeStyles : inactiveStyles}
+      >
         {text}
       </Disclosure.Button>
     </Link>
@@ -262,14 +280,16 @@ function MobileMenu({ link, text }: MobileMenuProps) {
 interface DesktopSettingsProps {
   text: string;
   link: string;
+  onClick?: () => void;
 }
 
-function DesktopSettings({ link, text }: DesktopSettingsProps) {
+function DesktopSettings({ link, text, onClick }: DesktopSettingsProps) {
   return (
     <Menu.Item>
       {({ active }) => (
         <Link href={link}>
           <a
+            onClick={onClick}
             className={classNames(
               active ? 'bg-gray-100' : '',
               'block px-4 py-2 text-sm text-gray-700'

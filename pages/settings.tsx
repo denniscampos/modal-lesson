@@ -10,6 +10,7 @@ import { Avatar } from '@/components/Avatar';
 import { GetServerSideProps } from 'next';
 import Label from '@/components/common/Label';
 
+// TODO: useQuery from apollo -- start refactoring
 const GET_PROFILE = gql`
   query ProfileData {
     getProfileList {

@@ -24,7 +24,8 @@
       "@/lib/*": ["lib/*"],
       "@/layout/*": ["layout/*"],
       "@/utils/*": ["utils/*"],
-      "@/hooks/*": ["hooks/*"]
+      "@/hooks/*": ["hooks/*"],
+      "@/validation/*": ["validation/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
