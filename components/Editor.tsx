@@ -7,6 +7,7 @@ export default function TextEditor() {
 
   const log = () => {
     if (editorRef.current) {
+      // eslint-disable-next-line no-console
       console.log(editorRef?.current?.getContent());
     }
   };

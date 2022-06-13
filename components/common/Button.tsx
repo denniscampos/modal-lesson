@@ -6,14 +6,15 @@ export type ButtonProps = {
   onClick?: () => void; //keep an eye on this..
   disabled?: boolean;
   className?: string;
+  type?: 'button' | 'submit' | 'reset';
 };
 
-const Button = ({ children, variant, className, ...args }: ButtonProps) => {
+const Button = ({ children, variant, className, type, ...args }: ButtonProps) => {
   const { ...props } = args;
 
   return (
     <div>
-      <button className={`${getVariant(variant)} ${className || ''}`} {...props}>
+      <button className={`${getVariant(variant)} ${className || ''}`} type={type} {...props}>
         {children}
       </button>
     </div>

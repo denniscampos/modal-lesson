@@ -6,6 +6,7 @@ import P from '@/components/common/P';
 import Spinner from '@/components/Spinner';
 import Heading from '@/components/common/Heading';
 import Editor from '@/components/Editor';
+import Modal from '@/components/common/Modal';
 
 const POST_QUERY = gql`
   query MyQuery {
@@ -46,6 +47,7 @@ const Home: NextPage = () => {
 
       <div className="mt-10">
         <Editor />
+        <Modal />
       </div>
     </div>
   );
