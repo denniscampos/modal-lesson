@@ -29,7 +29,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@lexical/react": "^0.3.1",
+    "@tinymce/tinymce-react": "^4.1.0",
     "@types/node": "^17.0.33",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.4",
@@ -37,7 +37,6 @@
     "cypress": "^9.7.0",
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
-    "lexical": "^0.3.1",
     "postcss": "^8.4.13",
     "react-social-login-buttons": "^3.6.0",
     "start-server-and-test": "^1.14.0",
