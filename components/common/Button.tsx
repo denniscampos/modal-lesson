@@ -26,7 +26,7 @@ function getVariant(variant: ButtonProps['variant']) {
 
   switch (variant) {
     case 'primary':
-      return `${commonStyles} bg-primary hover:bg-secondary disabled:opacity-20 disabled:pointer-events-none`;
+      return `${commonStyles} bg-primary hover:bg-medium-primary disabled:opacity-20 disabled:pointer-events-none`;
     case 'secondary':
       return `${commonStyles} bg-secondary disabled:opacity-20 disabled:pointer-events-none`;
     case 'danger':

@@ -5,8 +5,8 @@ import { gql, useQuery } from '@apollo/client';
 import P from '@/components/common/P';
 import Spinner from '@/components/Spinner';
 import Heading from '@/components/common/Heading';
-import Modal from '@/components/common/Modal';
 import Post from '@/components/Post';
+import { supabase } from '@/lib/supabaseClient';
 
 const POST_QUERY = gql`
   query MyQuery {
@@ -19,6 +19,9 @@ const POST_QUERY = gql`
 `;
 
 const Home: NextPage = () => {
+  const user = supabase.auth.user();
+
+  // TODO: Initiate stepzen to pick up new Postgres data
   const { data: postData, loading: postLoading, error: postError } = useQuery(POST_QUERY);
 
   if (!postData) {
@@ -41,13 +44,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Heading variant="h1" className="text-primary text-7xl cypressTest">
-        MODAL LESSON VIBES! 🚀
+      <Heading variant="h2" className="text-primary text-7xl cypressTest">
+        Welcome {!user ? 'Guest 🚀' : user?.email + '🚀'}
       </Heading>
 
       <div className="mt-10">
         <Post />
-        <Modal />
       </div>
     </div>
   );
