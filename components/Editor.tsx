@@ -10,7 +10,11 @@ import Input from '@/components/common/Input';
 import Spinner from '@/components/Spinner';
 import Button from '@/components/common/Button';
 
-export default function TextEditor() {
+interface Props {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+}
+
+export default function TextEditor({ setIsOpen }: Props) {
   const [postTitle, setPostTitle] = useState('');
   const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -48,7 +52,6 @@ export default function TextEditor() {
           draggable: true,
           progress: undefined,
         });
-
         // eslint-disable-next-line no-console
         console.log({ error });
       }
@@ -56,6 +59,7 @@ export default function TextEditor() {
       console.error(error);
     } finally {
       setLoading(false);
+      setIsOpen(false);
     }
   };
 

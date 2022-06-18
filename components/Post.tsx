@@ -21,7 +21,7 @@ export default function Post() {
   // https://projects.wojtekmaj.pl/react-calendar/
 
   return (
-    <div className="grid gap-4 grid-cols-1 grid-rows-3 sm:grid-cols-2 sm:grid-rows-2 md:grid-cols-5 md:grid-rows-3 ">
+    <div className="grid gap-4 grid-cols-1 grid-rows-3 sm:grid-cols-2 sm:grid-rows-2 md:grid-cols-5 md:grid-rows-3 max-w-6xl">
       <div className="bg-blue-400">
         <h1 className="font-bold">Monday</h1>
         <p>

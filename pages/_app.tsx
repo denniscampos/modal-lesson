@@ -18,7 +18,6 @@ function MyApp({ Component, pageProps: { ...pageProps } }: AppProps) {
 
       if (event === 'SIGNED_IN') {
         setAuthenticatedState('authenticated');
-        router.push('/settings');
       }
 
       if (event === 'SIGNED_OUT') {
