@@ -2,17 +2,16 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { supabase } from '@/lib/supabaseClient';
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { ErrorMessage } from '@hookform/error-message';
+
 import { schema } from '@/validation/schemaResolver';
-// import Image from 'next/image';
+import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/router';
 import Heading from '@/components/common/Heading';
 import Label from '@/components/common/Label';
 import SocialMediaIcon from '@/components/SocialMediaIcon';
-import { ErrorMessage } from '@hookform/error-message';
 
 interface DataProps {
   email: string;
@@ -20,8 +19,6 @@ interface DataProps {
 }
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const {
@@ -35,7 +32,9 @@ const Register = () => {
 
   const router = useRouter();
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (data: DataProps) => {
+    const { email, password } = data;
+
     try {
       setLoading(true);
       const { error } = await supabase.auth.signIn({
@@ -83,12 +82,7 @@ const Register = () => {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form
-              className="space-y-6"
-              action="#"
-              method="POST"
-              onSubmit={handleSubmit(handleSignIn)}
-            >
+            <form className="space-y-6" onSubmit={handleSubmit(handleSignIn)}>
               <div>
                 <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   Email address
@@ -97,10 +91,8 @@ const Register = () => {
                   <input
                     id="email"
                     type="email"
-                    autoComplete="email"
                     {...register('email', { required: true })}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    onChange={(e) => setEmail(e.target.value)}
                   />
                   <ErrorMessage
                     errors={errors}
@@ -118,10 +110,8 @@ const Register = () => {
                   <input
                     id="password"
                     type="password"
-                    autoComplete="current-password"
                     {...register('password', { required: true })}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <ErrorMessage
                     errors={errors}

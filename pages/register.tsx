@@ -34,11 +34,12 @@ const Register = () => {
 
   const createNewUser = async (data: DataProps) => {
     // in production need to enable email confirmations through supabase settings
+    const { email, password } = data;
     try {
       setLoading(true);
       const { error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
+        email,
+        password,
       });
 
       if (!error) {
@@ -89,7 +90,6 @@ const Register = () => {
                 <div className="mt-1">
                   <input
                     id="email"
-                    autoComplete="email"
                     required
                     {...register('email', { required: true })}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -111,7 +111,6 @@ const Register = () => {
                     id="password"
                     type="password"
                     {...register('password', { required: true })}
-                    autoComplete="current-password"
                     required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
