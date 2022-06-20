@@ -80,14 +80,14 @@ export default function Navbar({ auth }: AuthProps) {
                 </div>
                 <div className="hidden md:ml-6 md:flex md:space-x-8">
                   {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-                  <DesktopMenu link="/" text="Dashboard" />
-                  <DesktopMenu link="/#team" text="Team" />
+                  <DesktopMenu link="/" text="Home" />
+                  <DesktopMenu link="/#team" text="Grades" />
                   {auth === 'not-authenticated' ? (
-                    <DesktopMenu link="/#projects" text="Projects" />
+                    <DesktopMenu link="/#projects" text="Reports" />
                   ) : null}
                   {/* <DesktopMenu link="/#projects" text="Projects" /> */}
                   <DesktopMenu link="/#calendar" text="Calendar" />
-                  <DesktopMenu link="/protected" text="Protected" />
+                  <DesktopMenu link="/protected" text="Settings" />
                 </div>
               </div>
               <div className="flex items-center">
