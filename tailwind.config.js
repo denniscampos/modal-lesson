@@ -24,6 +24,10 @@ module.exports = {
         primary: 'var(--color-text-primary)',
         secondary: 'var(--color-text-light)',
       },
+      borderColor: {
+        primary: 'var(--color-text-light)',
+        secondary: 'var(--color-text-primary)',
+      },
     },
   },
   plugins: [],

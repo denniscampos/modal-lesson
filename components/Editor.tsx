@@ -21,26 +21,31 @@ export default function TextEditor({ setIsOpen }: Props) {
 
   const editorRef = useRef<TinyMCEEditor | null>(null);
 
-  //TODO: add closeModal function
+  //TODO: add protected route when posting.
 
+  const user = supabase.auth.user();
   const createLessonPlan = async () => {
     try {
       setLoading(true);
+
       const PostData = {
         title: postTitle,
         text: postText,
+        user: user?.id,
       };
-      const { error } = await supabase.from('post').insert(PostData);
+      const { data, error } = await supabase.from('post').insert(PostData);
 
-      toast.success('Lesson Plan Created Successfully', {
-        position: 'top-center',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      if (data) {
+        toast.success('Lesson Plan Created Successfully', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
 
       if (error) {
         toast.error(error?.message, {
@@ -111,9 +116,18 @@ export default function TextEditor({ setIsOpen }: Props) {
         }}
       />
       <div className="mt-4">
-        <Button variant="primary" onClick={createLessonPlan}>
-          <span>Post</span>
-        </Button>
+        {!user ? (
+          <div className="flex items-center">
+            <Button variant="primary" onClick={createLessonPlan} disabled>
+              <span>Post</span>
+            </Button>
+            <p className="text-red-500 ml-3 font-bold">You must login to post!</p>
+          </div>
+        ) : (
+          <Button variant="primary" onClick={createLessonPlan}>
+            <span>Post</span>
+          </Button>
+        )}
       </div>
     </>
   );

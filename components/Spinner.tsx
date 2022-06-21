@@ -1,9 +1,7 @@
 export default function Spinner() {
-  // https://projects.lukehaas.me/css-loaders/
-  // when I'm serious to change it.... lulz
   return (
-    <div className="flex justify-center items-center">
-      <div className="flex animate-spin bg-primary h-20 w-6 border-b-4 rounded-full"></div>
+    <div className="h-screen flex justify-center items-center">
+      <div className="animate-spin ease-linear rounded-full border-[3px] border-t-[3px] border-primary border-t-secondary h-8 w-8"></div>
     </div>
   );
 }
