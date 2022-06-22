@@ -9,6 +9,7 @@ import Label from '@/components/common/Label';
 import Input from '@/components/common/Input';
 import Spinner from '@/components/Spinner';
 import Button from '@/components/common/Button';
+import { useRouter } from 'next/router';
 
 interface Props {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean | undefined>>;
@@ -18,6 +19,8 @@ export default function TextEditor({ setIsOpen }: Props) {
   const [postTitle, setPostTitle] = useState('');
   const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const editorRef = useRef<TinyMCEEditor | null>(null);
 
@@ -36,6 +39,8 @@ export default function TextEditor({ setIsOpen }: Props) {
       const { data, error } = await supabase.from('post').insert(PostData);
 
       if (data) {
+        router.reload();
+
         toast.success('Lesson Plan Created Successfully', {
           position: 'top-center',
           autoClose: 5000,

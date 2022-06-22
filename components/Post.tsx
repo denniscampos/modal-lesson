@@ -1,62 +1,94 @@
-// import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
+import Spinner from './Spinner';
+
+interface PostProps {
+  id?: string;
+  title?: string;
+  text?: string;
+}
+[];
 
 export default function Post() {
-  // const date = dayjs().locale('en').add(1, 'day').format('MM/DD/YYYY');
+  const [postData, setPostData] = useState<PostProps[]>();
+  const [loading, setLoading] = useState(false);
 
-  // couple of notes to think about
-  // the days can be hardcoded since that will never change with the grid.
-  // the date preferably MM/DD/YYYY can be dynamic from dayJS.
+  const user = supabase?.auth?.user();
 
-  // const days = [
-  //   'Sunday',
-  //   'Monday',
-  //   'Tuesday,',
-  //   'Wednesday',
-  //   'Thursday',
-  //   'Friday',
-  //   'Saturday',
-  // ]
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
 
-  // calendars to consider:
-  // https://projects.wojtekmaj.pl/react-calendar/
+        const { data, error } = await supabase.from('post').select().eq('user', user?.id);
+
+        if (!data) return null;
+
+        setPostData(data);
+
+        if (error) {
+          console.error(error);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, [user?.id]);
 
   return (
-    <div className="grid gap-4 grid-cols-1 grid-rows-3 sm:grid-cols-2 sm:grid-rows-2 md:grid-cols-5 md:grid-rows-3 max-w-6xl">
-      <div className="bg-blue-400">
-        <h1 className="font-bold">Monday</h1>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut facilis
-          quae? Id necessitatibus sit tenetur est porro!
-        </p>
-      </div>
-      <div className="bg-red-500">
-        <h1 className="font-bold">Tuesday</h1>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut facilis
-          quae? Id necessitatibus sit tenetur est porro!
-        </p>
-      </div>
-      <div className="bg-gray-500">
-        <h1 className="font-bold">Wednesday</h1>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut facilis
-          quae? Id necessitatibus sit tenetur est porro!
-        </p>
-      </div>
-      <div className="bg-blue-400">
-        <h1 className="font-bold">Thursday</h1>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut facilis
-          quae? Id necessitatibus sit tenetur est porro!
-        </p>
-      </div>
-      <div className="bg-red-500">
-        <h1 className="font-bold">Friday</h1>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut facilis
-          quae? Id necessitatibus sit tenetur est porro!
-        </p>
-      </div>
-    </div>
+    <>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="grid gap-4 grid-cols-1 grid-rows-3 sm:grid-cols-2 sm:grid-rows-2 md:grid-cols-5 md:grid-rows-3 max-w-6xl">
+          <div className="bg-blue-400">
+            <h1 className="font-bold">Monday</h1>
+            {postData?.map(({ id, title, text }) => (
+              <div key={id}>
+                <h1>{title}</h1>
+                <p>{text}</p>
+              </div>
+            ))}
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut
+              facilis quae? Id necessitatibus sit tenetur est porro!
+            </p>
+          </div>
+          <div className="bg-red-500">
+            <h1 className="font-bold">Tuesday</h1>
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut
+              facilis quae? Id necessitatibus sit tenetur est porro!
+            </p>
+          </div>
+          <div className="bg-gray-500">
+            <h1 className="font-bold">Wednesday</h1>
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut
+              facilis quae? Id necessitatibus sit tenetur est porro!
+            </p>
+          </div>
+          <div className="bg-blue-400">
+            <h1 className="font-bold">Thursday</h1>
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut
+              facilis quae? Id necessitatibus sit tenetur est porro!
+            </p>
+          </div>
+          <div className="bg-red-500">
+            <h1 className="font-bold">Friday</h1>
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut
+              facilis quae? Id necessitatibus sit tenetur est porro!
+            </p>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
