@@ -43,7 +43,7 @@ const Register = () => {
       });
 
       if (!error) {
-        router.push('/');
+        router.push('/home');
       }
 
       if (error) {
