@@ -1,29 +1,17 @@
 import { supabase } from '@/lib/supabaseClient';
-import React, { useEffect, useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
+import React, { useEffect, useMemo, useState } from 'react';
+import { gql } from '@apollo/client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 // import useDebounce from '@/hooks/useDebounce';
 import Spinner from '@/components/Spinner';
 import Input from '@/components/common/Input';
 import { Avatar } from '@/components/Avatar';
 import { GetServerSideProps } from 'next';
 import Label from '@/components/common/Label';
-
-// TODO: useQuery from apollo -- start refactoring
-const GET_PROFILE = gql`
-  query ProfileData {
-    getProfileList {
-      id
-      about
-      email
-      first_name
-      last_name
-      website
-      updated_at
-    }
-  }
-`;
+import { useForm } from 'react-hook-form';
+import { watch } from 'fs';
 
 export default function Settings() {
   const [website, setWebsite] = useState('');
@@ -34,18 +22,19 @@ export default function Settings() {
   const [avatar_url, setAvatarUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const user = supabase.auth.user();
   // const debouncedWebsite = useDebounce<string>(website, 2000);
   // const debouncedAbout = useDebounce<string>(about, 500);
   // const debouncedFirstName = useDebounce<string>(firstName, 500);
   // const debouncedLastName = useDebounce<string>(lastName, 500);
   // const debouncedEmail = useDebounce<string>(email, 500);
 
+  // console.log(website);
+
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
         setLoading(true);
-
-        const user = supabase.auth.user();
 
         const { data, error, status } = await supabase
           .from('profile')
@@ -62,6 +51,7 @@ export default function Settings() {
         const { website, about, first_name, last_name, email, avatar_url } = data;
 
         if (data) {
+          reset: [{ website }];
           setWebsite(website);
           setAbout(about);
           setFirstName(first_name);
@@ -78,24 +68,24 @@ export default function Settings() {
     fetchProfileData();
   }, []);
 
-  const { data: profileData, loading: profileLoading, error: profileError } = useQuery(GET_PROFILE);
+  const {
+    register,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      website: website || '',
+      about: about || '',
+      first_name: firstName || '',
+      last_name: lastName || '',
+      email: user?.email || '',
+    },
+  });
 
-  if (!profileData) {
-    return null;
-  }
-
-  if (profileLoading) {
-    return <Spinner />;
-  }
-
-  if (profileError) {
-    return <p className="text-red-500">ERRORRRRRRR :( </p>;
-  }
-
-  const createOrUpdateProfile = async () => {
-    const user = supabase.auth.user();
+  const createOrUpdateProfile = async (data: any) => {
     try {
       setLoading(true);
+
+      const { website } = data;
 
       const PROFILE_DATA = {
         id: user?.id,
@@ -113,7 +103,7 @@ export default function Settings() {
 
       toast.success('Settings saved! 🚀', {
         position: 'top-center',
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -160,13 +150,14 @@ export default function Settings() {
                     https://
                   </span>
                   <Input
+                    {...register('website')}
                     type="text"
-                    name="website"
                     id="website"
                     value={website || ''}
                     autoComplete="website"
                     onChange={(e) => setWebsite(e.target.value)}
                   />
+                  {errors.website && <p>{errors?.website?.message}</p>}
                 </div>
               </div>
             </div>
@@ -180,8 +171,9 @@ export default function Settings() {
               </Label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <textarea
+                  {...register('about')}
                   id="about"
-                  name="about"
+                  // name="about"
                   rows={3}
                   className="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
                   value={about || ''}
@@ -196,7 +188,7 @@ export default function Settings() {
               size={150}
               onUpload={(url: any) => {
                 setAvatarUrl(url);
-                createOrUpdateProfile();
+                createOrUpdateProfile(url);
               }}
             />
           </div>
@@ -217,8 +209,9 @@ export default function Settings() {
               </Label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <Input
+                  {...register('first_name')}
                   type="text"
-                  name="first-name"
+                  // name="first-name"
                   id="first-name"
                   autoComplete="given-name"
                   value={firstName || ''}
@@ -236,8 +229,8 @@ export default function Settings() {
               </Label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <Input
+                  {...register('last_name')}
                   type="text"
-                  name="last-name"
                   id="last-name"
                   autoComplete="family-name"
                   value={lastName || ''}
@@ -255,8 +248,9 @@ export default function Settings() {
               </Label>
               <div className="mt-1 sm:mt-0 sm:col-span-2">
                 <Input
+                  {...register('email')}
                   id="email"
-                  name="email"
+                  // name="email"
                   type="email"
                   autoComplete="email"
                   value={email || ''}

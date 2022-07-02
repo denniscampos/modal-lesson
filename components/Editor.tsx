@@ -1,30 +1,40 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { Editor as TinyMCEEditor } from 'tinymce';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { supabase } from '@/lib/supabaseClient';
+import { useStore } from '@/hooks/useStore';
 import Label from '@/components/common/Label';
 import Input from '@/components/common/Input';
 import Spinner from '@/components/Spinner';
 import Button from '@/components/common/Button';
-import { useRouter } from 'next/router';
 
 interface Props {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }
 
 export default function TextEditor({ setIsOpen }: Props) {
-  const [postTitle, setPostTitle] = useState('');
-  const [postText, setPostText] = useState('');
+  // const [postTitle, setPostTitle] = useState('');
+  // const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
+  const postTitle = useStore((state) => state.postTitle);
+  const setPostTitle = useStore((state) => state.setPostTitle);
+  const postText = useStore((state) => state.postText);
+  const setPostText = useStore((state) => state.setPostText);
 
   const editorRef = useRef<TinyMCEEditor | null>(null);
 
   //TODO: add protected route when posting.
+
+  // const postTitle = useStore((state) => state.postTitle);
+  // const setPostTitle = useStore((state) => state.setPostTitle);
+
+  const postRef = useRef(useStore.getState().postTitle);
+
+  useEffect(() => useStore.subscribe((state) => (postRef.current = state.postTitle)), []);
 
   const user = supabase.auth.user();
   const createLessonPlan = async () => {
@@ -39,8 +49,6 @@ export default function TextEditor({ setIsOpen }: Props) {
       const { data, error } = await supabase.from('post').insert(PostData);
 
       if (data) {
-        router.reload();
-
         toast.success('Lesson Plan Created Successfully', {
           position: 'top-center',
           autoClose: 5000,
