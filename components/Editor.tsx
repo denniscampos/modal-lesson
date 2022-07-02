@@ -16,8 +16,6 @@ interface Props {
 }
 
 export default function TextEditor({ setIsOpen }: Props) {
-  // const [postTitle, setPostTitle] = useState('');
-  // const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
 
   const postTitle = useStore((state) => state.postTitle);
