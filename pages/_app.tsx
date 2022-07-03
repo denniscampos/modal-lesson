@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { MainLayout } from '@/layout/MainLayout';
 import { ApolloProvider } from '@apollo/client';
 import client from '@/lib/apolloClient';
@@ -7,6 +8,8 @@ import Navbar from '@/components/Navbar';
 import { useRouter } from 'next/router';
 import { supabase } from '@/lib/supabaseClient';
 import { useState, useEffect } from 'react';
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps: { ...pageProps } }: AppProps) {
   const [authenticatedState, setAuthenticatedState] = useState('not-authenticated');
@@ -53,10 +56,12 @@ function MyApp({ Component, pageProps: { ...pageProps } }: AppProps) {
 
   return (
     <ApolloProvider client={client}>
-      {loginOrRegisterPage && <Navbar auth={authenticatedState} />}
-      <MainLayout>
-        <Component {...pageProps} />
-      </MainLayout>
+      <QueryClientProvider client={queryClient}>
+        {loginOrRegisterPage && <Navbar auth={authenticatedState} />}
+        <MainLayout>
+          <Component {...pageProps} />
+        </MainLayout>
+      </QueryClientProvider>
     </ApolloProvider>
   );
 }

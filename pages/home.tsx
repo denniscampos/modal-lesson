@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { PlusSmIcon } from '@heroicons/react/solid';
+import { useQuery } from 'react-query';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Spinner from '@/components/Spinner';
 import Heading from '@/components/common/Heading';
@@ -16,16 +19,26 @@ interface PostProps {
 }
 [];
 
+async function fetchMyData() {
+  const user = supabase.auth.user();
+
+  const { data } = await supabase.from('post').select().eq('user', user?.id);
+
+  return data;
+}
+
 const Post = () => {
   const [postData, setPostData] = useState<PostProps[]>();
-  // const [postTitle, setPostTitle] = useState('');
-  // const [postText, setPostText] = useState('');
+  const [postTitle, setPostTitle] = useState('');
+  const [postText, setPostText] = useState('');
   const [loggedInUser, setloggedInUser] = useState<User | null>();
   const [loading, setLoading] = useState(false);
 
-  console.log(postData);
-
   const user = supabase.auth.user();
+
+  // create or update post function on this page.
+  // pass it down to a Modal and then pass the state to the Editor
+  // use zustand to possible help out here.
 
   useEffect(() => {
     setloggedInUser(user);
@@ -50,7 +63,64 @@ const Post = () => {
       }
     };
     fetchData();
-  }, [user?.id]);
+  }, [user?.id, postTitle, postText]);
+
+  const {
+    data: postMyData,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useQuery('post', fetchMyData, { refetchOnWindowFocus: false, refetchOnMount: true }) || {};
+
+  console.log('&&*&*&*&', postMyData);
+
+  const createLessonPlan = async () => {
+    try {
+      setLoading(true);
+
+      const PostData = {
+        title: postTitle,
+        text: postText,
+        user: user?.id,
+      };
+      const { data, error } = await supabase.from('post').insert(PostData);
+
+      if (data) {
+        toast.success('Lesson Plan Created Successfully', {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+
+      if (error) {
+        toast.error(error?.message, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        // eslint-disable-next-line no-console
+        console.log({ error });
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+      // setIsOpen(false);
+    }
+  };
+
+  if (isLoading && isFetching) {
+    return <Spinner />;
+  }
 
   return (
     <div>
@@ -82,8 +152,12 @@ const Post = () => {
             <div className="bg-blue-400">
               <h1 className="font-bold">Monday</h1>
               <div>
-                <h1>title</h1>
-                <p>text</p>
+                {postMyData?.map((post) => (
+                  <div key={post.id}>
+                    <h1 className="text-xl">{post.title}</h1>
+                    <p className="text-red-500">{post.text}</p>
+                  </div>
+                ))}
               </div>
               <p>
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure qui assumenda ut
