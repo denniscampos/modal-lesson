@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { PlusSmIcon } from '@heroicons/react/solid';
 import { useQuery } from 'react-query';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Spinner from '@/components/Spinner';
@@ -63,7 +62,7 @@ const Post = () => {
       }
     };
     fetchData();
-  }, [user?.id, postTitle, postText]);
+  }, []);
 
   const {
     data: postMyData,
@@ -73,50 +72,6 @@ const Post = () => {
   } = useQuery('post', fetchMyData, { refetchOnWindowFocus: false, refetchOnMount: true }) || {};
 
   console.log('&&*&*&*&', postMyData);
-
-  const createLessonPlan = async () => {
-    try {
-      setLoading(true);
-
-      const PostData = {
-        title: postTitle,
-        text: postText,
-        user: user?.id,
-      };
-      const { data, error } = await supabase.from('post').insert(PostData);
-
-      if (data) {
-        toast.success('Lesson Plan Created Successfully', {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-
-      if (error) {
-        toast.error(error?.message, {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        // eslint-disable-next-line no-console
-        console.log({ error });
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-      // setIsOpen(false);
-    }
-  };
 
   if (isLoading && isFetching) {
     return <Spinner />;

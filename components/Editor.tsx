@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { Editor as TinyMCEEditor } from 'tinymce';
 import { ToastContainer, toast } from 'react-toastify';
+import { useQueryClient, useMutation } from 'react-query';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { supabase } from '@/lib/supabaseClient';
@@ -27,10 +28,8 @@ export default function TextEditor({ setIsOpen }: Props) {
 
   //TODO: add protected route when posting.
 
-  // const postTitle = useStore((state) => state.postTitle);
-  // const setPostTitle = useStore((state) => state.setPostTitle);
-
   const postRef = useRef(useStore.getState().postTitle);
+  const queryClient = useQueryClient();
 
   useEffect(() => useStore.subscribe((state) => (postRef.current = state.postTitle)), []);
 
@@ -61,7 +60,7 @@ export default function TextEditor({ setIsOpen }: Props) {
       if (error) {
         toast.error(error?.message, {
           position: 'top-center',
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -78,6 +77,13 @@ export default function TextEditor({ setIsOpen }: Props) {
       setIsOpen(false);
     }
   };
+
+  const mutation = useMutation(createLessonPlan, {
+    // for reference: https://codesandbox.io/s/7higb?file=/pages/index.js:429-465
+    onSettled: () => {
+      queryClient.invalidateQueries('post');
+    },
+  });
 
   if (loading) {
     return <Spinner />;
@@ -135,7 +141,7 @@ export default function TextEditor({ setIsOpen }: Props) {
             <p className="text-red-500 ml-3 font-bold">You must login to post!</p>
           </div>
         ) : (
-          <Button variant="primary" onClick={createLessonPlan}>
+          <Button variant="primary" onClick={mutation.mutate}>
             <span>Post</span>
           </Button>
         )}
