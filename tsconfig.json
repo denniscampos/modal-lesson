@@ -25,6 +25,7 @@
       "@/layout/*": ["layout/*"],
       "@/utils/*": ["utils/*"],
       "@/hooks/*": ["hooks/*"],
+      "@/pages/*": ["pages/*"],
       "@/validation/*": ["validation/*"]
     }
   },

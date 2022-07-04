@@ -1,85 +1,63 @@
 import { supabase } from '@/lib/supabaseClient';
-import React, { useEffect, useMemo, useState } from 'react';
-import { gql } from '@apollo/client';
+import React, { useMemo, useState } from 'react';
+import { useQuery, useMutation } from 'react-query';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// import useDebounce from '@/hooks/useDebounce';
 import Spinner from '@/components/Spinner';
 import Input from '@/components/common/Input';
 import { Avatar } from '@/components/Avatar';
 import { GetServerSideProps } from 'next';
 import Label from '@/components/common/Label';
 import { useForm } from 'react-hook-form';
+import { CreateUpdateProfileForm } from '@/components/UseForm';
+
+export interface ProfileDataProps {
+  id?: string;
+  first_name?: string;
+  last_name?: string;
+  website?: string;
+  about?: string;
+  email?: string;
+  avatar_url?: string;
+}
 
 export default function Settings() {
-  const [website, setWebsite] = useState('');
-  const [about, setAbout] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [avatar_url, setAvatarUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
   const user = supabase.auth.user();
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        setLoading(true);
+  const { data } = useQuery('profile', fetchProfileData, {
+    refetchOnWindowFocus: false,
+  });
 
-        const { data, error, status } = await supabase
-          .from('profile')
-          .select('*')
-          .eq('id', user?.id)
-          .single();
+  const { website, about, first_name, last_name, email, avatar_url } = data || {};
 
-        if (!data) return null;
-
-        if (error && status !== 406) {
-          throw error;
-        }
-
-        const { website, about, first_name, last_name, email, avatar_url } = data;
-
-        if (data) {
-          setWebsite(website);
-          setAbout(about);
-          setFirstName(first_name);
-          setLastName(last_name);
-          setEmail(email);
-          setAvatarUrl(avatar_url);
-        }
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfileData();
-  }, []);
+  //TODO: check if data is blank before rendering component.
 
   const {
     register,
+    watch,
+    handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      website: website || '',
+      website: website,
       about: about || '',
-      first_name: firstName || '',
-      last_name: lastName || '',
+      first_name: first_name || '',
+      last_name: last_name || '',
       email: user?.email || '',
     },
   });
 
-  const createOrUpdateProfile = async (data: any) => {
+  const createOrUpdateProfile = async (data: ProfileDataProps) => {
     try {
       setLoading(true);
 
       const PROFILE_DATA = {
         id: user?.id,
-        first_name: firstName,
-        last_name: lastName,
+        first_name: first_name,
+        last_name: last_name,
         website,
         about,
         email,
@@ -113,6 +91,24 @@ export default function Settings() {
     }
   };
 
+  // if (website) {
+  //   debugger;
+  // }
+
+  // const mutation = useMutation(createOrUpdateProfile, {
+  //   onSuccess: () => {
+  //     // toast...
+  //   },
+  // });
+
+  // console.log(mutation.mutate);
+
+  if (data) {
+    return <CreateUpdateProfileForm profile={data} createOrUpdateProfile={createOrUpdateProfile} />;
+  }
+
+  // return 'loading...';
+
   return (
     // <form className="space-y-8 divide-y divide-gray-200" onSubmit={createOrUpdateProfile}>
     <>
@@ -126,6 +122,7 @@ export default function Settings() {
           </div>
 
           <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+            {/* {data ?? <UseForm profile={data} createOrUpdateProfile={createOrUpdateProfile} />} */}
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
               <Label
                 htmlFor="website"
@@ -138,15 +135,15 @@ export default function Settings() {
                   <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
                     https://
                   </span>
-                  <Input
-                    {...register('website')}
+                  <input
+                    {...register('website', { required: false })}
                     type="text"
-                    id="website"
-                    value={website || ''}
-                    autoComplete="website"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setWebsite(e.target.value)
-                    }
+                    // id="website"
+                    // value={website || ''}
+                    // autoComplete="website"
+                    // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    //   setWebsite(e.target.value)
+                    // }
                   />
                   {errors.website && <p>{errors?.website?.message}</p>}
                 </div>
@@ -168,7 +165,7 @@ export default function Settings() {
                   rows={3}
                   className="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
                   value={about || ''}
-                  onChange={(e) => setAbout(e.target.value)}
+                  // onChange={(e) => setAbout(e.target.value)}
                 />
                 <p className="mt-2 text-sm text-gray-500">Write a few sentences about yourself.</p>
               </div>
@@ -178,7 +175,7 @@ export default function Settings() {
               url={avatar_url}
               size={150}
               onUpload={(url: any) => {
-                setAvatarUrl(url);
+                // setAvatarUrl(url);
                 createOrUpdateProfile(url);
               }}
             />
@@ -205,10 +202,10 @@ export default function Settings() {
                   // name="first-name"
                   id="first-name"
                   autoComplete="given-name"
-                  value={firstName || ''}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFirstName(e.target.value)
-                  }
+                  value={first_name || ''}
+                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  //   setFirstName(e.target.value)
+                  // }
                 />
               </div>
             </div>
@@ -226,8 +223,8 @@ export default function Settings() {
                   type="text"
                   id="last-name"
                   autoComplete="family-name"
-                  value={lastName || ''}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
+                  value={last_name || ''}
+                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
                 />
               </div>
             </div>
@@ -247,7 +244,7 @@ export default function Settings() {
                   type="email"
                   autoComplete="email"
                   value={email || ''}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -418,7 +415,7 @@ export default function Settings() {
           </button>
           <button
             disabled={loading}
-            onClick={createOrUpdateProfile}
+            onClick={handleSubmit(createOrUpdateProfile)}
             type="submit"
             className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
@@ -445,4 +442,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   return {
     props: { user },
   };
+};
+
+const fetchProfileData = async () => {
+  const user = supabase.auth.user();
+  try {
+    const { data, error } = await supabase.from('profile').select('*').eq('id', user?.id).single();
+
+    if (error) {
+      // handle this better.
+      throw new Error('something went wrong');
+    }
+
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 };

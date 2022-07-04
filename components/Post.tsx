@@ -17,9 +17,6 @@ export default function Post() {
 
   const user = supabase?.auth?.user();
 
-  // const postTitle = useStore((state) => state.postTitle);
-  // const setPostTitle = useStore((state) => state.setPostTitle);
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
