@@ -17,12 +17,14 @@ interface Props {
 }
 
 export default function TextEditor({ setIsOpen }: Props) {
+  const [postTitle, setPostTitle] = useState('');
+  const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const postTitle = useStore((state) => state.postTitle);
-  const setPostTitle = useStore((state) => state.setPostTitle);
-  const postText = useStore((state) => state.postText);
-  const setPostText = useStore((state) => state.setPostText);
+  // const postTitle = useStore((state) => state.postTitle);
+  // const setPostTitle = useStore((state) => state.setPostTitle);
+  // const postText = useStore((state) => state.postText);
+  // const setPostText = useStore((state) => state.setPostText);
 
   const editorRef = useRef<TinyMCEEditor | null>(null);
 

@@ -1,6 +1,0 @@
-schema
-  @sdl(
-    files: ["postgresql-01/postgresql.graphql", "postgresql/postgresql.graphql"]
-  ) {
-  query: Query
-}

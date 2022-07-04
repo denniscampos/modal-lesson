@@ -28,8 +28,7 @@
     "react-hook-form": "^7.31.2",
     "react-query": "^3.39.1",
     "react-toastify": "^9.0.4",
-    "yup": "^0.32.11",
-    "zustand": "^4.0.0-rc.1"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@tinymce/tinymce-react": "^4.1.0",

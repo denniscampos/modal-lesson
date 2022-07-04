@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { useStore } from '@/hooks/useStore';
 import Spinner from './Spinner';
 
 interface PostProps {
@@ -12,12 +11,14 @@ interface PostProps {
 
 export default function Post() {
   const [postData, setPostData] = useState<PostProps[]>();
+  const [postTitle, setPostTitle] = useState('');
+  const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
 
   const user = supabase?.auth?.user();
 
-  const postTitle = useStore((state) => state.postTitle);
-  const setPostTitle = useStore((state) => state.setPostTitle);
+  // const postTitle = useStore((state) => state.postTitle);
+  // const setPostTitle = useStore((state) => state.setPostTitle);
 
   useEffect(() => {
     const fetchPosts = async () => {
