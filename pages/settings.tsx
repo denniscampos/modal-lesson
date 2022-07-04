@@ -11,7 +11,6 @@ import { Avatar } from '@/components/Avatar';
 import { GetServerSideProps } from 'next';
 import Label from '@/components/common/Label';
 import { useForm } from 'react-hook-form';
-import { watch } from 'fs';
 
 export default function Settings() {
   const [website, setWebsite] = useState('');
@@ -23,13 +22,6 @@ export default function Settings() {
   const [loading, setLoading] = useState(false);
 
   const user = supabase.auth.user();
-  // const debouncedWebsite = useDebounce<string>(website, 2000);
-  // const debouncedAbout = useDebounce<string>(about, 500);
-  // const debouncedFirstName = useDebounce<string>(firstName, 500);
-  // const debouncedLastName = useDebounce<string>(lastName, 500);
-  // const debouncedEmail = useDebounce<string>(email, 500);
-
-  // console.log(website);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -51,7 +43,6 @@ export default function Settings() {
         const { website, about, first_name, last_name, email, avatar_url } = data;
 
         if (data) {
-          reset: [{ website }];
           setWebsite(website);
           setAbout(about);
           setFirstName(first_name);
@@ -84,8 +75,6 @@ export default function Settings() {
   const createOrUpdateProfile = async (data: any) => {
     try {
       setLoading(true);
-
-      const { website } = data;
 
       const PROFILE_DATA = {
         id: user?.id,
@@ -155,7 +144,9 @@ export default function Settings() {
                     id="website"
                     value={website || ''}
                     autoComplete="website"
-                    onChange={(e) => setWebsite(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setWebsite(e.target.value)
+                    }
                   />
                   {errors.website && <p>{errors?.website?.message}</p>}
                 </div>
@@ -215,7 +206,9 @@ export default function Settings() {
                   id="first-name"
                   autoComplete="given-name"
                   value={firstName || ''}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFirstName(e.target.value)
+                  }
                 />
               </div>
             </div>
@@ -234,7 +227,7 @@ export default function Settings() {
                   id="last-name"
                   autoComplete="family-name"
                   value={lastName || ''}
-                  onChange={(e) => setLastName(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
                 />
               </div>
             </div>
@@ -254,7 +247,7 @@ export default function Settings() {
                   type="email"
                   autoComplete="email"
                   value={email || ''}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 />
               </div>
             </div>

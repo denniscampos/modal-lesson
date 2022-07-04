@@ -27,11 +27,7 @@ export default function TextEditor({ setIsOpen }: Props) {
   const editorRef = useRef<TinyMCEEditor | null>(null);
 
   //TODO: add protected route when posting.
-
-  const postRef = useRef(useStore.getState().postTitle);
   const queryClient = useQueryClient();
-
-  useEffect(() => useStore.subscribe((state) => (postRef.current = state.postTitle)), []);
 
   const user = supabase.auth.user();
   const createLessonPlan = async () => {
@@ -95,7 +91,12 @@ export default function TextEditor({ setIsOpen }: Props) {
       <Label className="text-xl" htmlFor="title">
         Title
       </Label>
-      <Input type="text" name="title" id="title" onChange={(e) => setPostTitle(e.target.value)} />
+      <Input
+        type="text"
+        name="title"
+        id="title"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPostTitle(e.target.value)}
+      />
       <Editor
         apiKey={process.env.NEXT_PUBLIC_TINYMCE_API}
         onInit={(evt, editor) => (editorRef.current = editor)}

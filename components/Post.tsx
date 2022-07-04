@@ -19,10 +19,6 @@ export default function Post() {
   const postTitle = useStore((state) => state.postTitle);
   const setPostTitle = useStore((state) => state.setPostTitle);
 
-  const postRef = useRef(useStore.getState().postTitle);
-
-  useEffect(() => useStore.subscribe((state) => (postRef.current = state.postTitle)), [postTitle]);
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
