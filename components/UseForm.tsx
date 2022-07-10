@@ -1,20 +1,23 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Input from '@/components/common/Input';
 import { ProfileDataProps } from '@/pages/settings';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import Label from './common/Label';
 import { Avatar } from './Avatar';
+import { useMutation, MutationFunction } from 'react-query';
 
-type ProfileHandler = (data: ProfileDataProps) => void;
-
+type ProfileHandler = MutationFunction<unknown, ProfileDataProps>;
 interface ProfileFormProps {
+  loading: boolean;
   profile: ProfileDataProps;
   createOrUpdateProfile: ProfileHandler;
 }
 
-export const CreateUpdateProfileForm = ({ profile, createOrUpdateProfile }: ProfileFormProps) => {
-  const [loading, setLoading] = useState(false);
+export const CreateUpdateProfileForm = ({
+  profile,
+  loading,
+  createOrUpdateProfile,
+}: ProfileFormProps) => {
   const { website, about, first_name, last_name, email, avatar_url } = profile;
 
   const {
@@ -31,6 +34,24 @@ export const CreateUpdateProfileForm = ({ profile, createOrUpdateProfile }: Prof
       avatar_url: avatar_url || '',
     },
   });
+
+  const { mutateAsync } = useMutation(createOrUpdateProfile, {
+    onSuccess: () => {
+      toast.success('Settings saved! 🚀', {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    },
+  });
+
+  const onSubmit = (data: ProfileDataProps) => {
+    mutateAsync(data);
+  };
 
   return (
     <div>
@@ -323,7 +344,7 @@ export const CreateUpdateProfileForm = ({ profile, createOrUpdateProfile }: Prof
           </button>
           <button
             disabled={loading}
-            onClick={handleSubmit(createOrUpdateProfile)}
+            onClick={handleSubmit(onSubmit)}
             type="submit"
             className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >

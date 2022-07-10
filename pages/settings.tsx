@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabaseClient';
 import React, { useState } from 'react';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, UseMutateFunction, useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -28,7 +28,7 @@ export default function Settings() {
       refetchOnWindowFocus: false,
     }) || {};
 
-  const createOrUpdateProfile = async (data: ProfileDataProps) => {
+  const createOrUpdateProfile = async (data: ProfileDataProps): Promise<void> => {
     try {
       setLoading(true);
 
@@ -48,16 +48,6 @@ export default function Settings() {
         .from('profile')
         .upsert(PROFILE_DATA, { returning: 'minimal' });
 
-      toast.success('Settings saved! 🚀', {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
       if (error) {
         alert(error);
         // eslint-disable-next-line no-console
@@ -71,18 +61,14 @@ export default function Settings() {
     }
   };
 
-  // const mutation = useMutation(createOrUpdateProfile, {
-  //   onSuccess: () => {
-  //     // toast...
-  //   },
-  // });
-
-  // console.log(mutation.mutate);
-
   return (
     <>
       {data ? (
-        <CreateUpdateProfileForm profile={data} createOrUpdateProfile={createOrUpdateProfile} />
+        <CreateUpdateProfileForm
+          profile={data}
+          createOrUpdateProfile={createOrUpdateProfile}
+          loading={loading}
+        />
       ) : null}
     </>
   );
