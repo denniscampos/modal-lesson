@@ -98,9 +98,8 @@ export const CreateUpdateProfileForm = ({
                 <textarea
                   {...register('about')}
                   id="about"
-                  // name="about"
                   rows={3}
-                  className="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
+                  className="max-w-lg p-[6px] shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
                   // onChange={(e) => setAbout(e.target.value)}
                 />
                 <p className="mt-2 text-sm text-gray-500">Write a few sentences about yourself.</p>
