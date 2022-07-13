@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import Spinner from './Spinner';
 
@@ -11,8 +11,8 @@ interface PostProps {
 
 export default function Post() {
   const [postData, setPostData] = useState<PostProps[]>();
-  const [postTitle, setPostTitle] = useState('');
-  const [postText, setPostText] = useState('');
+  // const [postTitle, setPostTitle] = useState('');
+  // const [postText, setPostText] = useState('');
   const [loading, setLoading] = useState(false);
 
   const user = supabase?.auth?.user();

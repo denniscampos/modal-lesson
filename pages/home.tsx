@@ -11,15 +11,8 @@ import Button from '@/components/common/Button';
 import { supabase } from '@/lib/supabaseClient';
 import { User } from '@supabase/supabase-js';
 
-interface PostProps {
-  id?: string;
-  title?: string;
-  text?: string;
-}
-[];
-
 async function fetchMyData() {
-  const user = supabase.auth.user();
+  const user = await supabase.auth.user();
 
   const { data } = await supabase.from('post').select().eq('user', user?.id);
 
@@ -27,51 +20,21 @@ async function fetchMyData() {
 }
 
 const Post = () => {
-  const [postData, setPostData] = useState<PostProps[]>();
-  const [postTitle, setPostTitle] = useState('');
-  const [postText, setPostText] = useState('');
   const [loggedInUser, setloggedInUser] = useState<User | null>();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const user = supabase.auth.user();
 
-  // create or update post function on this page.
-  // pass it down to a Modal and then pass the state to the Editor
-  // use zustand to possible help out here.
-
   useEffect(() => {
+    // I feel there's a better wait for this.
     setloggedInUser(user);
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        const { data, error } = await supabase.from('post').select().eq('user', user?.id);
-
-        if (!data) return null;
-
-        setPostData(data);
-
-        if (error) {
-          console.error(error);
-        }
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  }, [user]);
 
   const {
     data: postMyData,
     isLoading,
     isFetching,
-    refetch,
   } = useQuery('post', fetchMyData, { refetchOnWindowFocus: false, refetchOnMount: true }) || {};
-
-  console.log('&&*&*&*&', postMyData);
 
   if (isLoading && isFetching) {
     return <Spinner />;
@@ -85,7 +48,7 @@ const Post = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {loading ? (
+      {isLoading ? (
         <Spinner />
       ) : (
         <div>

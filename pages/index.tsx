@@ -1,42 +1,8 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { gql, useQuery } from '@apollo/client';
 import { ToastContainer } from 'react-toastify';
 
-import P from '@/components/common/P';
-import Spinner from '@/components/Spinner';
-import Post from '@/components/Post';
-import Heading from '@/components/common/Heading';
-import { supabase } from '@/lib/supabaseClient';
-
-const POST_QUERY = gql`
-  query MyQuery {
-    getPostList {
-      id
-      text
-      title
-    }
-  }
-`;
-
 const Home: NextPage = () => {
-  // TODO: Initiate stepzen to pick up new Postgres data
-  const { data: postData, loading: postLoading, error: postError } = useQuery(POST_QUERY);
-
-  const user = supabase.auth.user();
-
-  if (!postData) {
-    return null;
-  }
-
-  if (postLoading) {
-    return <Spinner />;
-  }
-
-  if (postError) {
-    return <P variant="p1">something went wrong...</P>;
-  }
-
   return (
     <div>
       <ToastContainer />
@@ -47,7 +13,7 @@ const Home: NextPage = () => {
       </Head>
 
       <div className="mt-10">
-        <Post />
+        <h1>placeholder for now..</h1>
       </div>
     </div>
   );
